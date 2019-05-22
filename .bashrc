@@ -7,6 +7,7 @@ HISTSIZE=1000000
 export CLICOLOR=1
 export LSCOLORS=GxFxCxDxBxegedabagaced
 
+# git brach auto completion
 test -f ~/.git-completion.bash && . $_
 
 parse_git_branch() {
