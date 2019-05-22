@@ -7,6 +7,8 @@ HISTSIZE=1000000
 export CLICOLOR=1
 export LSCOLORS=GxFxCxDxBxegedabagaced
 
+test -f ~/.git-completion.bash && . $_
+
 parse_git_branch() {
     git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ (\1)/'
 }
