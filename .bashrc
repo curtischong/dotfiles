@@ -19,3 +19,5 @@ print_before_the_prompt () { # makes it so the terminal lines have color
 PROMPT_COMMAND=print_before_the_prompt
 
 export PS1='\n->'
+
+[[ $- == *i* ]] && stty -ixon # Allows for forward search via ctrl + s
