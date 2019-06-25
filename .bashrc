@@ -1,10 +1,9 @@
+alias grep="grep --color=always"
+
 set -o vi
 
 HISTFILESIZE=1000000
 HISTSIZE=1000000
-
-# CLI options
-export GREP_OPTIONS='--color=always'
 
 # colours for the terminal to differentiate between files and directories
 export CLICOLOR=1
