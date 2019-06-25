@@ -1,3 +1,5 @@
+alias hgrep="grep -r --color=always"
+
 set -o vi
 
 HISTFILESIZE=1000000
