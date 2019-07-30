@@ -1,7 +1,7 @@
 # Quality of Life
 alias grep="grep --color=always"
 
-alias vv='virtualenv venv'
+# alias vv='virtualenv venv' # quite dangerous
 alias sv='source venv/bin/activate'
 alias sb='source ~/.bash_profile'
 alias vb='vim ~/.bash_profile'
