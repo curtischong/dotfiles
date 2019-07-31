@@ -2,8 +2,8 @@
 alias grep="grep --color=always"
 
 # alias vv='virtualenv venv' # quite dangerous
-alias sv='source venv/bin/activate'
-alias sb='source ~/.bash_profile'
+alias sv='source venv/bin/activate; echo activated venv on $(which python) $(python --version);'
+alias sb='source ~/.bash_profile; echo sourced bash_profile;'
 alias vb='vim ~/.bash_profile'
 
 set -o vi
