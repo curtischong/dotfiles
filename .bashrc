@@ -5,6 +5,7 @@ alias grep="grep --color=always"
 alias sv='source venv/bin/activate; echo activated venv on $(which python) $(python --version);'
 alias sb='source ~/.bash_profile; echo sourced bash_profile;'
 alias vb='vim ~/.bash_profile'
+[[ $- == *i* ]] && stty -ixon # Allows for forward search via ctrl + s
 
 set -o vi
 
