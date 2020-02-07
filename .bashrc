@@ -11,6 +11,7 @@ set -o vi
 
 HISTFILESIZE=1000000
 HISTSIZE=1000000
+export HISTCONTROL=ignoredups # This ignores duplicate commands in .bash_history
 
 # colours for the terminal to differentiate between files and directories
 export CLICOLOR=1
