@@ -35,7 +35,7 @@ concise (prompt flow)<br>
 no (enable transient prompt)<br>
 verbose (instant prompt mode)<br>
 yes (apply changes to .zshrc<br>
-6. append .zshrc in this dir to .zshrc<br>
+6. append .zshrc in this dir to .zshrc. (Note: your configs need to append cause powerlevel10k overwrites things like vi mode)<br>
 `cat .zshrc >> ~/.zshrc`
 7. Make the terminal look nicer<br>
 `vim ~/.p10k.zsh`<br>
