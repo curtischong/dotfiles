@@ -9,3 +9,9 @@ For macOS the default shell is now zsh. Set it to bash for your bashrc to work: 
 
 ##### Bash_rc
 ```curl https://raw.githubusercontent.com/git/git/master/contrib/completion/git-completion.bash -o ~/.git-completion.bash```
+
+##### zsh
+`apt install zsh`
+`chsh -s /usr/bin/zsh root` (changes the default shell to zsh
+`wget https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh -O - | zsh` (installs oh my zsh)
+log out, then log in.
