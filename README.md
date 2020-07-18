@@ -37,4 +37,9 @@ verbose (instant prompt mode)<br>
 yes (apply changes to .zshrc<br>
 6. append .zshrc in this dir to .zshrc<br>
 `cat .zshrc >> ~/.zshrc`
-7. log out. then log in.
+7. Make the terminal look nicer<br>
+`vim ~/.p10k.zsh`<br>
+search for `DIR_FOREGROUND` and change to `227` (yellow)<br>
+search for `ANCHOR_FOREGROUND` and change to `173` (red)<br>
+
+8. log out. then log in.
