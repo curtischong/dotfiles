@@ -12,15 +12,14 @@ For macOS the default shell is now zsh. Set it to bash for your bashrc to work: 
 
 ##### zsh
 1. `apt install zsh`
-2. Change the default shell to zsh
+2. Change the default shell to zsh<br>
 `chsh -s /usr/bin/zsh root`
-3. Install oh my zsh
+3. Install oh my zsh<br>
 `wget https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh -O - | zsh`
-4. Manual powerlevel10k installation
+4. Manual powerlevel10k installation<br>
 `git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ~/powerlevel10k
 echo 'source ~/powerlevel10k/powerlevel10k.zsh-theme' >>! ~/.zshrc`
-5. log out, then log in.
-answers:
+5. log out, then log in. Provide the following answers:<br>
 5 yeses<br>
 lean<br>
 unicode<br>
@@ -36,6 +35,6 @@ concise (prompt flow)<br>
 no (enable transient prompt)<br>
 verbose (instant prompt mode)<br>
 yes (apply changes to .zshrc<br>
-6. append .zshrc in this dir to .zshrc
+6. append .zshrc in this dir to .zshrc<br>
 `cat .zshrc >> ~/.zshrc`
 7. log out. then log in.
