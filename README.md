@@ -2,6 +2,8 @@
 
 ### Installation:
 
+For macOS the default shell is now zsh. Set it to bash for your bashrc to work: https://www.google.com/amp/s/www.howtogeek.com/444596/how-to-change-the-default-shell-to-bash-in-macos-catalina/amp/
+
 ##### Vim
 ```:source %```
 
