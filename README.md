@@ -21,18 +21,21 @@ For macOS the default shell is now zsh. Set it to bash for your bashrc to work: 
 echo 'source ~/powerlevel10k/powerlevel10k.zsh-theme' >>! ~/.zshrc`
 5. log out, then log in.
 answers:
-5 yeses
-lean
-unicode
-256 colors
-no (show current time)
-2 lines
-dotted
-left (prompt frame)
-lightest (connection frame color)
-compact (prompt spacing)
-few icons
-concise (prompt flow)
-no (enable transient prompt)
-verbose (instant prompt mode)
-yes (apply changes to .zshrc
+5 yeses<br>
+lean<br>
+unicode<br>
+256 colors<br>
+no (show current time)<br>
+2 lines<br>
+dotted<br>
+left (prompt frame)<br>
+lightest (connection frame color)<br>
+compact (prompt spacing)<br>
+few icons<br>
+concise (prompt flow)<br>
+no (enable transient prompt)<br>
+verbose (instant prompt mode)<br>
+yes (apply changes to .zshrc<br>
+6. append .zshrc in this dir to .zshrc
+`cat .zshrc >> ~/.zshrc`
+7. log out. then log in.
