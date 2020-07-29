@@ -10,6 +10,9 @@ For macOS the default shell is now zsh. Set it to bash for your bashrc to work: 
 ##### Bash_rc
 ```curl https://raw.githubusercontent.com/git/git/master/contrib/completion/git-completion.bash -o ~/.git-completion.bash```
 
+##### Git
+` git config --global help.autocorrect 1`
+
 ##### zsh
 1. `apt install zsh`
 2. Change the default shell to zsh<br>
