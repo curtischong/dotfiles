@@ -39,7 +39,7 @@ no (enable transient prompt)<br>
 verbose (instant prompt mode)<br>
 yes (apply changes to .zshrc<br>
 6. append .zshrc in this dir to .zshrc. (Note: Your configs need to appended cause powerlevel10k overwrites flags like vi mode)<br>
-`cat .zshrc >> ~/.zshrc`
+`cat ~/.dot_files/.zshrc >> ~/.zshrc`
 7. Make the terminal look nicer<br>
 `vim ~/.p10k.zsh`<br>
 search for `DIR_FOREGROUND` and change to `227` (yellow)<br>
