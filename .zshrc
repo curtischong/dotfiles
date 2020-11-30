@@ -15,3 +15,6 @@ function pd { cd ${PWD%/$1/*}/$1; } # cd to a parent directory
 bindkey '^r' history-incremental-search-backward
 bindkey '^s' history-incremental-search-forward
 
+export NVM_DIR="$HOME/.nvm"
+[ -s "/usr/local/opt/nvm/nvm.sh" ] && . "/usr/local/opt/nvm/nvm.sh"  # This loads nvm
+[ -s "/usr/local/opt/nvm/etc/bash_completion" ] && . "/usr/local/opt/nvm/etc/bash_completion"  # This    loads nvm bash_completion
