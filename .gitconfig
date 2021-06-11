@@ -1,0 +1,5 @@
+[user]
+  name = Curtis Chong
+  email = curtischong5@gmail.com
+[alias]
+  pf = push --force-with-lease
