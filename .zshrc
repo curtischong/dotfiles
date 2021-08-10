@@ -1,9 +1,22 @@
 HISTFILESIZE=1000000
 HISTSIZE=1000000
 
-alias sz='source ~/.zshrc; echo sourced zshrc;'
+alias sz='source ~/.zshrc && echo sourced zshrc;'
 alias vz='vim ~/.zshrc'
 alias rmoldbranches='git branch --merged | grep -v \* | xargs git branch -D'
+
+alias gl='git pull'
+alias gp='git push && echo "git push"'
+alias gpf='git push --force-with-lease && echo "git push --force-with-lease"'
+alias gco='git checkout'
+alias gcob='git checkout -b'
+alias gcm='git commit -m'
+alias gc='git commit --amend --no-edit --date=now && echo "git commit --amend --no-edit --date=now"'
+alias gf='git fetch origin && echo "fetched origin"'
+alias grm='gf && git rebase origin/master'
+alias gr='git rebase --onto'
+alias grl='git reflog'
+alias glg='git log'
 
 bindkey -v # for vi in terminal
 bindkey "^?" backward-delete-char # fixes a bug that prevents you from hitting backspace in insert mode
