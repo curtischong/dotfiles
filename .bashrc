@@ -11,7 +11,7 @@ alias sz='source ~/.zshrc && echo sourced zshrc;'
 alias vz='vim ~/.zshrc'
 alias rmoldbranches='git branch --merged | grep -v \* | xargs git branch -D'
 
-alias gl='git pull'
+alias gpl='git pull'
 alias gp='git push && echo "git push"'
 alias gpf='git push --force-with-lease && echo "git push --force-with-lease"'
 alias gco='git checkout'
@@ -22,7 +22,7 @@ alias gf='git fetch origin && echo "fetched origin"'
 alias grm='gf && git rebase origin/master'
 alias gr='git rebase --onto'
 alias grl='git reflog'
-alias glg='git log'
+alias gl='git log'
 
 [[ $- == *i* ]] && stty -ixon # Allows for forward search via ctrl + s
 
