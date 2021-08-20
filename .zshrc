@@ -8,6 +8,7 @@ alias rmoldbranches='git branch --merged | grep -v \* | xargs git branch -D'
 alias gpl='git pull'
 alias gp='git push && echo "git push"'
 alias gpf='git push --force-with-lease && echo "git push --force-with-lease"'
+alias gps='git push --set-upstream origin'
 alias gco='git checkout'
 alias gcob='git checkout -b'
 alias gcm='git commit -m'
@@ -17,6 +18,7 @@ alias grm='gf && git rebase origin/master'
 alias gr='git rebase --onto'
 alias grl='git reflog'
 alias gl='git log'
+alias gs='git status'
 
 bindkey -v # for vi in terminal
 bindkey "^?" backward-delete-char # fixes a bug that prevents you from hitting backspace in insert mode
