@@ -50,6 +50,9 @@ For macOS the default shell is now zsh. Set it to bash for your bashrc to work: 
 
 8. log out. then log in.
 
+TODO: install https://github.com/wting/autojump and https://github.com/zsh-users/zsh-autosuggestions
+also figure out how to export zsh cnofig
+
 ##### JetBrains
 
 1. Click `File | Manage IDE Settings | Import Settings`
