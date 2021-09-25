@@ -1,3 +1,5 @@
+source *.crc
+
 # Quality of Life
 alias grep="grep --color=always"
 

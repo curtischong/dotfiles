@@ -1,0 +1,3 @@
+# common .rc file
+
+alias cl="clear && printf '\e[3J'"
