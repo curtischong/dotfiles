@@ -1,4 +1,5 @@
-"REMEMBER TO INSTALL VIM SURROUND!!!!!
+" Plugins to install
+" Vim surround
 colo ron
 set number relativenumber
 augroup numbertoggle
@@ -35,12 +36,6 @@ hi VertSplit ctermbg=NONE guibg=NONE
 nnoremap <CR> :noh<CR><CR>
 "turn off search highlight
 "nnoremap <leader><space> :nohlsearch<CR>
-"inoremap <BS> <Nop>
-"inoremap <Del> <Nop>
-"if $TERM_PROGRAM =~ "iTerm"
-"  let &t_SI = "\<Esc>]50;CursorShape=1\x7" " Vertical bar in insert mode
-"  let &t_EI = "\<Esc>]50;CursorShape=0\x7" " Block in normal mode
-"endif
 
 " Commenting blocks of code.
 autocmd FileType c,cpp,java,scala let b:comment_leader = '// '
@@ -51,10 +46,6 @@ autocmd FileType mail             let b:comment_leader = '> '
 autocmd FileType vim              let b:comment_leader = '" '
 noremap <silent> ,cc :<C-B>silent <C-E>s/^/<C-R>=escape(b:comment_leader,'\/')<CR>/<CR>:nohlsearch<CR>
 noremap <silent> ,cu :<C-B>silent <C-E>s/^\V<C-R>=escape(b:comment_leader,'\/')<CR>//e<CR>:nohlsearch<CR>
-
-
-
-
 
 if exists('$TMUX')
   let &t_SI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=1\x7\<Esc>\\"
