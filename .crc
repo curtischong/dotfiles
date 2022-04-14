@@ -11,7 +11,7 @@ export CLICOLOR=1
 export LSCOLORS=GxFxCxDxBxegedabagaced
 
 source "$HOME/.gitrc"
-alias vim="/usr/bin/nvim"
+#alias vim="/bin/nvim"
 alias cl="clear && printf '\e[3J'"
 set -o vi
 

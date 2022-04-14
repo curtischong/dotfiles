@@ -31,6 +31,53 @@ set hlsearch            " highlight matches
 set fillchars+=vert:│ " changes the panel colours
 hi VertSplit ctermbg=NONE guibg=NONE
 
+tnoremap ` <esc>
+tnoremap <esc> <C-\><C-n>
+" <install supertab>
+
+" delete without yanking
+nnoremap <leader>d "_d"
+vnoremap <leader>d "_d"
+
+"replace selected text with default register (without yanking it)
+nnoremap <leader>p viw"0p
+vnoremap <leader>p "0p
+
+" copy current directory into the unamed buffer
+:nmap cp :let @" = expand("%:h")<cr>
+
+
+" update vim
+noremap <leader>s :source ~/.vimrc<cr>
+" Better window navigation
+noremap <leader>h <C-w>h
+noremap <leader>j <C-w>j
+noremap <leader>k <C-w>k
+noremap <leader>l <C-w>l
+" Better window paning
+noremap <leader>H <C-w>H
+noremap <leader>J <C-w>J
+noremap <leader>K <C-w>K
+noremap <leader>L <C-w>L
+" Better window paning resize
+noremap <leader>+ <C-w>+
+noremap <leader>- <C-w>-
+noremap <leader>< <C-w>>
+noremap <leader>> <C-w><
+
+
+" Go to tab by number
+noremap <leader>1 1gt
+noremap <leader>2 2gt
+noremap <leader>3 3gt
+noremap <leader>4 4gt
+noremap <leader>5 5gt
+noremap <leader>6 6gt
+noremap <leader>7 7gt
+noremap <leader>8 8gt
+noremap <leader>9 9gt
+noremap <leader>0 :tablast<cr>
+
 
 "This unsets the "last search pattern" register by hitting return
 nnoremap <CR> :noh<CR><CR>
