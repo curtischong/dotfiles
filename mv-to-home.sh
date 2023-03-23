@@ -15,4 +15,5 @@ else
   rm .bashrc
 fi
 
-mv *.* ~/
+# use dotglob to exclude "." and  ".." directories
+shopt -s dotglob && mv . ~/
