@@ -15,4 +15,4 @@ else
   rm .bashrc
 fi
 
-mv *. ~/
+mv *.* ~/
