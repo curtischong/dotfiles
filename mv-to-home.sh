@@ -16,4 +16,5 @@ else
 fi
 
 # use dotglob to exclude "." and  ".." directories
-shopt -s dotglob && mv . ~/
+mv ./.* ~/
+
