@@ -27,3 +27,7 @@ fi
 alias cd=_cdd
 alias cdd='cd $(fd --type directory | fzf)'
 alias xclip='xclip -selection clipboard'
+
+# python aliases
+alias create-venv='python -m venv ./venv'
+alias sv='source venv/bin/activate; echo "activated venv"'
