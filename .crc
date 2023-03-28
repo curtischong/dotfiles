@@ -1,6 +1,7 @@
 # common .rc file
 
 alias vv='vim ~/.vimrc'
+alias vcrc='vim ~/.crc'
 
 HISTFILESIZE=1000000
 HISTSIZE=1000000
