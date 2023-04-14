@@ -12,5 +12,6 @@ alias gr='git rebase --onto'
 alias grl='git reflog'
 alias gl='git log'
 alias gs='git status'
+alias ga='git add'
 
 alias rmoldbranches='git branch --merged | grep -v \* | xargs git branch -D'
