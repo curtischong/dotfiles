@@ -13,5 +13,6 @@ alias grl='git reflog'
 alias gl='git log'
 alias gs='git status'
 alias ga='git add'
+alias gd='git diff'
 
 alias rmoldbranches='git branch --merged | grep -v \* | xargs git branch -D'
