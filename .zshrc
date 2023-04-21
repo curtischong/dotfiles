@@ -22,5 +22,6 @@ function parse_git_branch() {
     git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ (\1)/'
 }
 
-export PS1="$(printf "\e[1;31m%s: \e[1;33m%s \e[1;92m%s \e[1;0m"  "$USER" "$PWD" "$(parse_git_branch)")
-->"
+setopt prompt_subst # ensure prompt is reevaluated each time https://stackoverflow.com/questions/39689789/zsh-setopt-prompt-subst-not-working
+PS1='$(printf "\e[1;31m%s: \e[1;33m%s \e[1;92m%s \e[1;0m"  "$USER" "$PWD" "$(parse_git_branch)")
+->'
