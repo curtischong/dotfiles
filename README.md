@@ -3,11 +3,12 @@
 ### TODO:
 - add `git rebase --continue/--abort to .commonrc`
 - add `git push --set-upstream origin`
-- figure out if you can get mac to also read this directory when looking at dot files
-- This would be really good because I would no longer need to move all dot files to the root directory (and I can keep files updated with version control)
 - Add a command to recursively fuzzy search for a file name under the current directory (with a pretty dropdown)
+- Source the user's per-machine custom .bashrc/zsh in addition to the .bashrc found here
 
 ### Installation:
+
+run `sh link_dotfiles.sh` to create symlinks in $HOME to the files in this directory
 
 Since the default macOS shell is now zsh, if you want to use the .bashrc instead of .zshrc, use: https://www.google.com/amp/s/www.howtogeek.com/444596/how-to-change-the-default-shell-to-bash-in-macos-catalina/amp/
 
@@ -66,6 +67,4 @@ also figure out how to export zsh config
    - You can update the settings with: `File | Manage IDE Settings | Export Settings`
 
 ##### IDEAVim
-TODO: use symlinks
-- Place `.ideavimrc` in your home directory: `cp .ideavimrc ~/`
   - You may need to restart the IDE.
