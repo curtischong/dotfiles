@@ -1,5 +1,5 @@
 
-source "$HOME/.crc"
+source "$HOME/.commonrc"
 
 alias sz='source ~/.zshrc && echo sourced zshrc;'
 alias vz='vim ~/.zshrc'

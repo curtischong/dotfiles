@@ -1,4 +1,4 @@
-source "$HOME/.crc"
+source "$HOME/.commonrc"
 
 # Quality of Life
 alias grep="grep --color=always"

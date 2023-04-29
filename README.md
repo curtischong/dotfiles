@@ -1,7 +1,7 @@
 # dot_files
 
 ### TODO:
-- add `git rebase --continue/--abort to .crc`
+- add `git rebase --continue/--abort to .commonrc`
 - add `git push --set-upstream origin`
 - figure out if you can get mac to also read this directory when looking at dot files
 - This would be really good because I would no longer need to move all dot files to the root directory (and I can keep files updated with version control)
