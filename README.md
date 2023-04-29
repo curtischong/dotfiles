@@ -9,19 +9,18 @@
 
 ### Installation:
 
-For macOS the default shell is now zsh. Set it to bash for your bashrc to work: https://www.google.com/amp/s/www.howtogeek.com/444596/how-to-change-the-default-shell-to-bash-in-macos-catalina/amp/
-
-##### Vim
-
-`:source %`
+Since the default macOS shell is now zsh, if you want to use the .bashrc instead of .zshrc, use: https://www.google.com/amp/s/www.howtogeek.com/444596/how-to-change-the-default-shell-to-bash-in-macos-catalina/amp/
 
 ##### Bash_rc
 
+As of April 2023 I'm not using this.
 `curl https://raw.githubusercontent.com/git/git/master/contrib/completion/git-completion.bash -o ~/.git-completion.bash`
 
 ##### Git
 
-` git config --global help.autocorrect 1`
+As of April 2023 I'm not using this.
+Run this if you want git to automatically run the suggested commands (when you make a typo).
+`git config --global help.autocorrect 1`
 
 ##### zsh
 
@@ -58,7 +57,7 @@ For macOS the default shell is now zsh. Set it to bash for your bashrc to work: 
 8. log out. then log in.
 
 TODO: install https://github.com/wting/autojump and https://github.com/zsh-users/zsh-autosuggestions
-also figure out how to export zsh cnofig
+also figure out how to export zsh config
 
 ##### JetBrains
 
@@ -67,6 +66,6 @@ also figure out how to export zsh cnofig
    - You can update the settings with: `File | Manage IDE Settings | Export Settings`
 
 ##### IDEAVim
-
+TODO: use symlinks
 - Place `.ideavimrc` in your home directory: `cp .ideavimrc ~/`
   - You may need to restart the IDE.
