@@ -1,10 +1,7 @@
 # dot_files
 
 ### TODO:
-- add `git rebase --continue/--abort to .commonrc`
 - add `git push --set-upstream origin`
-- Add a command to recursively fuzzy search for a file name under the current directory (with a pretty dropdown)
-- Source the user's per-machine custom .bashrc/zsh in addition to the .bashrc found here
 
 ### Installation:
 

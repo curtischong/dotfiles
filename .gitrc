@@ -9,6 +9,8 @@ alias gc='git commit --amend --no-edit --date=now && echo "git commit --amend --
 alias gf='git fetch origin && echo "fetched origin"'
 alias grm='gf && git rebase origin/main || git rebase origin/master'
 alias gr='git rebase --onto'
+alias grc='git rebase --continue'
+alias gra='git rebase --abort'
 alias grl='git reflog'
 alias gl='git log'
 alias gs='git status'
