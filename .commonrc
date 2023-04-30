@@ -18,7 +18,7 @@ export LSCOLORS=GxFxCxDxBxegedabagaced
 
 #alias vim="/bin/nvim"
 alias cl="clear && printf '\e[3J'"
-set -o vi
+set -o vi # enables vi mode in terminal
 
 # Open new terminal in same directory as last terminal:
 function _cdd {
@@ -34,4 +34,7 @@ alias xclip='xclip -selection clipboard'
 
 # python aliases
 alias create-venv='python -m venv ./venv'
-alias sv='source venv/bin/activate; echo "activated venv"'
+alias sv='source venv/bin/activate; echo activated venv on $(which python) $(python --version);'
+
+# Quality of Life
+alias rg="rg --color=always"

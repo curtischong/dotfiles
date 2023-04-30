@@ -15,4 +15,5 @@ alias gs='git status'
 alias ga='git add'
 alias gd='git diff'
 
+# TODO: use rg over grep?
 alias rmoldbranches='git branch --merged | grep -v \* | xargs git branch -D'

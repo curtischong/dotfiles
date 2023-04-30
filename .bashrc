@@ -1,20 +1,12 @@
 source "$HOME/.commonrc"
 
-# Quality of Life
-alias grep="grep --color=always"
-
-# alias vv='virtualenv venv' # quite dangerous
-alias sv='source venv/bin/activate; echo activated venv on $(which python) $(python --version);'
 alias sb='source ~/.bashrc && echo sourced bashrc;'
 alias vb='vim ~/.bashrc'
-alias rmoldbranches='git branch --merged | grep -v \*     | xargs git branch -D'
 
 [[ $- == *i* ]] && stty -ixon # Allows for forward search via ctrl + s
 
-set -o vi
-
 # git brach auto completion
-test -f ~/.git-completion.bash && . $_
+test -f "$HOME/.git-completion.bash" && . $_
 
 parse_git_branch() {
     git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ (\1)/'
