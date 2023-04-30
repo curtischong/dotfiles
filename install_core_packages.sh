@@ -1,38 +1,41 @@
 
+#!/bin/bash
+
+options=("macOS (brew)" "Debian/Ubuntu (apt-get)" "Fedora (dnf)" "CentOS (yum)" "Arch Linux (pacman)")
 echo "Select your Linux distribution from the following list:"
-echo "0. macOS (brew)"
-echo "1. Debian/Ubuntu (apt-get)"
-echo "2. Fedora (dnf)"
-echo "3. CentOS (yum)"
-echo "4. Arch Linux (pacman)"
+PS3="Enter choice number: "
 
-read distro_num
-
-case $distro_num in
-    0)
-        distro="macOS"
-        package_manager="brew install"
-        ;;
-    1)
-        distro="debian/ubuntu"
-        package_manager="sudo apt-get install -y"
-        ;;
-    2)
-        distro="fedora"
-        package_manager="sudo dnf install -y"
-        ;;
-    3)
-        distro="centos"
-        package_manager="sudo yum install -y"
-        ;;
-    4)
-        distro="arch linux"
-        package_manager="sudo pacman install -y"
-        ;;
-    *)
-        echo "Invalid input. Please choose a number between 1 and 4."
-        exit 1
-esac
+select opt in "${options[@]}"
+do
+    case $opt in
+        "macOS (brew)")
+            distro="macOS"
+            package_manager="brew install"
+            break
+            ;;
+        "Debian/Ubuntu (apt-get)")
+            distro="debian/ubuntu"
+            package_manager="sudo apt-get install -y"
+            break
+            ;;
+        "Fedora (dnf)")
+            distro="fedora"
+            package_manager="sudo dnf install -y"
+            break
+            ;;
+        "CentOS (yum)")
+            distro="centos"
+            package_manager="sudo yum install -y"
+            break
+            ;;
+        "Arch Linux (pacman)")
+            distro="arch linux"
+            package_manager="sudo pacman install -y"
+            break
+            ;;
+        *) echo "Invalid input. Please choose a number between 1 and ${#options[@]}";;
+    esac
+done
 
 echo "You have selected $distro"
 
