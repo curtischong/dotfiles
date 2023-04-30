@@ -1,8 +1,5 @@
 # dot_files
 
-### TODO:
-- add `git push --set-upstream origin`
-
 ### Installation:
 
 run `sh link_dotfiles.sh` to create symlinks in $HOME to the files in this directory
