@@ -14,6 +14,9 @@ function pd { cd ${PWD%/$1/*}/$1; } # cd to a parent directory
 bindkey '^r' history-incremental-search-backward
 bindkey '^s' history-incremental-search-forward
 
+setopt autocd # allows you to cd into a directory by just typing its name
+# e.g. typing ".." will cd into the parent directory
+
 export NVM_DIR="$HOME/.nvm"
 [ -s "/usr/local/opt/nvm/nvm.sh" ] && . "/usr/local/opt/nvm/nvm.sh"  # This loads nvm
 [ -s "/usr/local/opt/nvm/etc/bash_completion" ] && . "/usr/local/opt/nvm/etc/bash_completion"  # This loads nvm bash_completion

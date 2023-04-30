@@ -73,6 +73,7 @@ if [ $distro == "macOS" ]; then
 
                 echo '# ---- Start of install_core_packages.sh ----' >> $personalrc_location;
                 echo 'export HOMEBREW_PREFIX=/opt/homebrew' >> $personalrc_location;
+                echo 'export PATH=/opt/homebrew/bin:$PATH' >> $personalrc_location;
 
                 # https://formulae.brew.sh/formula/zsh-syntax-highlighting
                 echo 'source $HOMEBREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh' >> $personalrc_location;

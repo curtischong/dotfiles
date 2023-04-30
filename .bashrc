@@ -5,6 +5,9 @@ alias vb='vim ~/.bashrc'
 
 [[ $- == *i* ]] && stty -ixon # Allows for forward search via ctrl + s
 
+shopt -s autocd # allows you to cd into a directory by just typing its name
+# e.g. typing ".." will cd into the parent directory
+
 # git brach auto completion
 test -f "$HOME/.git-completion.bash" && . $_
 
