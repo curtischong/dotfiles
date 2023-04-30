@@ -33,3 +33,9 @@ done
 
 # copy rather than moving since we don't want to mess up the githistory of this repo
 cp .personalrc "$HOME/.personalrc"
+
+if [ "$env_type" = "bash" ]; then
+  source "$HOME/.bashrc"
+else
+  source "$HOME/.zshrc"
+fi

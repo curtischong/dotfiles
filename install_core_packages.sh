@@ -113,3 +113,9 @@ if [ $distro == "macOS" ]; then
         esac
     done
 fi
+
+if [ $distro == "macOS" ]; then
+  source "$HOME/.zshrc"
+else
+  source "$HOME/.bashrc"
+fi
