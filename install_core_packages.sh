@@ -53,10 +53,49 @@ $package_manager \
 
 $package_manager fd-find || $package_manager fd `#really useful for showing all directories and feeding them into fzf` \
 
+if [ $distro == "macOS" ]; then
+    while true; do
+        echo "Do you want to install the following packages? (y/n)"
+        read -p "zsh-syntax-highlighting, zsh-autosuggestions, zsh-completions, zsh-history-substring-search: " yn
+        case $yn in
+            [Yy]* )
+                brew install zsh-syntax-highlighting zsh-autosuggestions zsh-completions zsh-history-substring-search;
+                # TODO: change it so it's to the personal zshrc
+                $personal_zshrc = ~/.zshrc;
+
+                echo 'export HOMEBREW_PREFIX=/opt/homebrew' >> $personal_zshrc;
+
+                # https://formulae.brew.sh/formula/zsh-syntax-highlighting
+                echo 'source $HOMEBREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh' >> $personal_zshrc;
+
+                # https://formulae.brew.sh/formula/zsh-autosuggestions
+                echo 'source $HOMEBREW_PREFIX/share/zsh-autosuggestions/zsh-autosuggestions.zsh' >> $personal_zshrc;
+                # If you receive "highlighters directory not found" error message, you may need to add the following to your .zshenv:
+                # export ZSH_HIGHLIGHT_HIGHLIGHTERS_DIR=$HOMEBREW_PREFIX/share/zsh-syntax-highlighting/highlighters
+
+                # https://formulae.brew.sh/formula/zsh-completions
+                echo ' if type brew &>/dev/null; then
+     FPATH=$(brew --prefix)/share/zsh-completions:$FPATH
+
+     autoload -Uz compinit
+     compinit
+    fi' >> $personal_zshrc;
+                # You may also need to force rebuild `zcompdump`:
+                # 
+                #     rm -f ~/.zcompdump; compinit
+                # 
+                # Additionally, if you receive "zsh compinit: insecure directories" warnings when attempting
+                # to load these completions, you may need to run this:
+                # 
+                #     chmod -R go-w '$HOMEBREW_PREFIX/share/zsh'
 
 
-# TODO: consider installing the following for zsh
-# zsh-syntax-highlighting \
-# zsh-autosuggestions \
-# zsh-completions \
-# zsh-history-substring-sear
+                # https://formulae.brew.sh/formula/zsh-history-substring-search
+                source $HOMEBREW_PREFIX/share/zsh-history-substring-search/zsh-history-substring-search.zsh >> $personal_zshrc;
+
+                break;;
+            [Nn]* ) echo "Skipping..."; break;;
+            * ) echo "Please answer yes or no.";;
+        esac
+    done
+fi
