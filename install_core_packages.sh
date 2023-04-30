@@ -11,33 +11,33 @@ read distro_num
 case $distro_num in
     0)
         distro="macOS"
-        package_manager="brew"
+        package_manager="brew install"
         ;;
     1)
         distro="debian/ubuntu"
-        package_manager="apt-get"
+        package_manager="sudo apt-get install -y"
         ;;
     2)
         distro="fedora"
-        package_manager="dnf"
+        package_manager="sudo dnf install -y"
         ;;
     3)
         distro="centos"
-        package_manager="yum"
+        package_manager="sudo yum install -y"
         ;;
     4)
         distro="arch linux"
-        package_manager="pacman"
+        package_manager="sudo pacman install -y"
         ;;
     *)
         echo "Invalid input. Please choose a number between 1 and 4."
         exit 1
 esac
 
-echo "You have selected $distro and the package manager is $package_manager."
+echo "You have selected $distro"
 
 echo "Installing core packages..."
-sudo $package_manager install -y \
+$package_manager \
     git `#dont need to install git cause you needed git to install this repo` \
     vim \
     tmux \
@@ -46,8 +46,9 @@ sudo $package_manager install -y \
     xclip `#TODO: check if we can do cat file | xclip -selection clipboard` \
     fzf `#fuzzy finding` \
     ripgrep `#just faster grep. And prettier coloring I think` \
-    fd-find `#really useful for showing all directories and feeding them into fzf` \
     `# neovim - not sure if I should uncomment`
+
+$package_manager fd-find || $package_manager fd `#really useful for showing all directories and feeding them into fzf` \
 
 
 
