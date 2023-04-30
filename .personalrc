@@ -1,0 +1,4 @@
+# This rc file is for all of the configs specific to this machine
+# Why not use .bash_profile (bash) or .profile (zsh)?
+# Because the linux server may already come with these files.
+# We want to have a config file that we know is not tampered with

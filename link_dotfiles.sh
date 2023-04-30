@@ -31,3 +31,5 @@ for file in "${filesToLink[@]}"; do
   ln -nfs "$PWD/$file" "$HOME/$file"
 done
 
+# copy rather than moving since we don't want to mess up the githistory of this repo
+cp .personalrc "$HOME/.personalrc"

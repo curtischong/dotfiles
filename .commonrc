@@ -1,6 +1,10 @@
-alias vvrc='vim ~/.vimrc'
 alias vcrc='vim ~/.commonrc'
 alias vgrc='vim ~/.gitrc'
+alias vprc='vim ~/.personalrc'
+alias vvrc='vim ~/.vimrc'
+
+source "$HOME/.gitrc"
+source "$HOME/.personalrc"
 
 HISTFILESIZE=1000000
 HISTSIZE=1000000
@@ -10,7 +14,6 @@ export HISTCONTROL=ignoredups # This ignores duplicate commands in .bash_history
 export CLICOLOR=1
 export LSCOLORS=GxFxCxDxBxegedabagaced
 
-source "$HOME/.gitrc"
 #alias vim="/bin/nvim"
 alias cl="clear && printf '\e[3J'"
 set -o vi

@@ -60,8 +60,7 @@ if [ $distro == "macOS" ]; then
         case $yn in
             [Yy]* )
                 brew install zsh-syntax-highlighting zsh-autosuggestions zsh-completions zsh-history-substring-search;
-                # TODO: change it so it's to the personal zshrc
-                $personal_zshrc = ~/.zshrc;
+                $personal_zshrc = ~/.personalrc;
 
                 echo 'export HOMEBREW_PREFIX=/opt/homebrew' >> $personal_zshrc;
 
