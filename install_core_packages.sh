@@ -62,6 +62,7 @@ if [ $distro == "macOS" ]; then
                 brew install zsh-syntax-highlighting zsh-autosuggestions zsh-completions zsh-history-substring-search;
                 $personal_zshrc = ~/.personalrc;
 
+                echo '---- Start of install_core_packages.sh ----' >> $personal_zshrc;
                 echo 'export HOMEBREW_PREFIX=/opt/homebrew' >> $personal_zshrc;
 
                 # https://formulae.brew.sh/formula/zsh-syntax-highlighting
@@ -71,6 +72,8 @@ if [ $distro == "macOS" ]; then
                 echo 'source $HOMEBREW_PREFIX/share/zsh-autosuggestions/zsh-autosuggestions.zsh' >> $personal_zshrc;
                 # If you receive "highlighters directory not found" error message, you may need to add the following to your .zshenv:
                 # export ZSH_HIGHLIGHT_HIGHLIGHTERS_DIR=$HOMEBREW_PREFIX/share/zsh-syntax-highlighting/highlighters
+                echo '# bind CTRL+O to forward-word so we can accept one token at a time (rather than the entire line)' >> $personal_zshrc;
+                echo 'bindkey ^O forward-word # https://stackoverflow.com/questions/2212203/moving-a-word-forward-in-z-shell' >> $personal_zshrc;
 
                 # https://formulae.brew.sh/formula/zsh-completions
                 echo ' if type brew &>/dev/null; then
@@ -91,6 +94,8 @@ if [ $distro == "macOS" ]; then
 
                 # https://formulae.brew.sh/formula/zsh-history-substring-search
                 source $HOMEBREW_PREFIX/share/zsh-history-substring-search/zsh-history-substring-search.zsh >> $personal_zshrc;
+
+                echo '---- End of install_core_packages.sh ----' >> $personal_zshrc;
 
                 break;;
             [Nn]* ) echo "Skipping..."; break;;
