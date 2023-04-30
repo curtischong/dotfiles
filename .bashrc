@@ -1,7 +1,7 @@
 source "$HOME/.commonrc"
 
-alias sb='source ~/.bashrc && echo sourced bashrc;'
-alias vb='vim ~/.bashrc'
+alias sr="source $HOME/.bashrc && echo sourced bashrc;" # sr means: source .bashrc
+alias vr="vim $HOME/.bashrc"  # vr means: vim .bashrc
 
 [[ $- == *i* ]] && stty -ixon # Allows for forward search via ctrl + s
 
