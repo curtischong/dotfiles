@@ -29,7 +29,7 @@ if [ -f ~/.last_dir ]; then
         _cdd "`cat ~/.last_dir`"
 fi
 alias cd=_cdd
-alias cdd='cd $(fd --type directory | fzf)'
+alias cdd='cd $(fd --type directory | fzf || echo .)' # The "|| echo ." makes it so if we cancel the fzf command, we don't change to a diff directory
 alias xclip='xclip -selection clipboard'
 
 # python aliases
