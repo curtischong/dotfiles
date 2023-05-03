@@ -14,6 +14,9 @@ function pd { cd ${PWD%/$1/*}/$1; } # cd to a parent directory
 bindkey '^r' history-incremental-search-backward
 bindkey '^s' history-incremental-search-forward
 
+setopt hist_ignore_all_dups # don't remember commands that are ran twice in a row
+setopt hist_ignore_space # if a command starts with a space, it won't be added to the command history
+
 setopt autocd # allows you to cd into a directory by just typing its name
 # e.g. typing ".." will cd into the parent directory
 

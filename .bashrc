@@ -8,6 +8,9 @@ alias vr="vim $HOME/.bashrc"  # vr means: vim .bashrc
 shopt -s autocd # allows you to cd into a directory by just typing its name
 # e.g. typing ".." will cd into the parent directory
 
+HISTCONTROL=ignorespace # don't remember commands that are ran and started with a space
+HISTCONTROL=ignoredups # don't remember commands that are ran twice in a row
+
 # git brach auto completion
 test -f "$HOME/.git-completion.bash" && . $_
 
