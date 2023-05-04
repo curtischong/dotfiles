@@ -4,7 +4,7 @@
 
 run `sh link_dotfiles.sh` to create symlinks in $HOME to the files in this directory
 
-Since the default macOS shell is now zsh, if you want to use the .bashrc instead of .zshrc, use: https://www.google.com/amp/s/www.howtogeek.com/444596/how-to-change-the-default-shell-to-bash-in-macos-catalina/amp/
+Since the default macOS shell is now zsh, if you want to change the macOS shell to bash, use: https://www.google.com/amp/s/www.howtogeek.com/444596/how-to-change-the-default-shell-to-bash-in-macos-catalina/amp/
 
 ##### Bash_rc
 
