@@ -1,3 +1,4 @@
+source "$HOME/.commonrc"
 alias sr="source $HOME/.bashrc && echo sourced bashrc;" # sr means: source .bashrc
 alias vr="vim $HOME/.bashrc"  # vr means: vim .bashrc
 
@@ -8,13 +9,6 @@ shopt -s autocd # allows you to cd into a directory by just typing its name
 
 HISTCONTROL=ignorespace # don't remember commands that are ran and started with a space
 HISTCONTROL=ignoredups # don't remember commands that are ran twice in a row
-
-cd_to_last_open_dir(){
-  if [ -f ~/.last_dir ]; then
-          _cdd "`cat ~/.last_dir`"
-  fi
-}
-PROMPT_COMMAND="cd_to_last_open_dir"
 
 # fzf complete makefile commands: https://stackoverflow.com/a/71966611/4647924
 complete -W "\`grep -oE '^[a-zA-Z0-9_.-]+[\\:]*[a-zA-Z0-9_.-]+:([^=]|$)' ?akefile | sort | uniq | sed 's/[^a-zA-Z0-9_.-]*$//' | sed 's/[\]//g' | fzf\`" make

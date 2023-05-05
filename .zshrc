@@ -1,3 +1,4 @@
+source "$HOME/.commonrc"
 alias sr="source $HOME/.zshrc && echo sourced zshrc;" # sr means: source .zshrc
 alias vr="vim $HOME/.zshrc"  # vr means: vim .zshrc
 
@@ -14,13 +15,6 @@ setopt hist_ignore_space # if a command starts with a space, it won't be added t
 # TODO: autocd will NOT remember your previous directory. unlike the cd_ alias. We should fix this
 setopt autocd # allows you to cd into a directory by just typing its name
 # e.g. typing ".." will cd into the parent directory
-
-precmd (){
-  if [ -f ~/.last_dir ]; then
-          _cdd "`cat ~/.last_dir`"
-  fi
-}
-
 
 # fzf complete makefile commands: https://stackoverflow.com/a/71966611/4647924
 # but converted into zsh
