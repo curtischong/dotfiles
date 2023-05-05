@@ -21,9 +21,10 @@ setopt autocd # allows you to cd into a directory by just typing its name
 _my_make_completion() {
   local options
   options=$(grep -oE '^[a-zA-Z0-9_.-]+[:]*[a-zA-Z0-9_.-]+:([^=]|$)' Makefile | sort | uniq | sed 's/[^a-zA-Z0-9_.-]*$//' | sed 's/[\\]//g' | fzf)
-  reply=($options)
+  compadd -- ${options}
 }
-compdef _my_make_completion make # Register the completion function with the make command
+compdef _my_make_completion make  # Register the completion function with the make command
+
 
 export NVM_DIR="$HOME/.nvm"
 [ -s "/usr/local/opt/nvm/nvm.sh" ] && . "/usr/local/opt/nvm/nvm.sh"  # This loads nvm
