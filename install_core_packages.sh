@@ -63,6 +63,7 @@ echo "You have selected $distro"
 echo "Installing core packages..."
 $package_manager \
     git `#dont need to install git cause you needed git to install this repo` \
+    htop \
     vim \
     tmux \
     curl \
