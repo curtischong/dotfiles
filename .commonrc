@@ -1,10 +1,11 @@
+echo ".gitrc sourced in $( TIMEFORMAT=%R; time (source "$HOME/.gitrc") ) seconds"
+echo ".personalrc sourced in $( TIMEFORMAT=%R; time (source "$HOME/.personalrc") ) seconds"
+
 alias vcrc='vim ~/.commonrc'
 alias vgrc='vim ~/.gitrc'
 alias vprc='vim ~/.personalrc'
 alias vvrc='vim ~/.vimrc'
 
-source "$HOME/.gitrc"
-source "$HOME/.personalrc"
 
 HISTSIZE=1000000 # the number of commands that are loaded into memory from the history file
 HISTFILESIZE=1000000 # the number of commands that are stored in the history file (when the shell ends)
@@ -25,9 +26,7 @@ function _cdd {
     builtin cd $@ &&
     pwd > ~/.last_dir
 }
-if [ -f ~/.last_dir ]; then
-        _cdd "`cat ~/.last_dir`"
-fi
+# the logic to use ~/.last_dir is diff for bash and zsh. So check the respective rc files
 alias cd=_cdd
 alias cdd='cd $(fd --type directory | fzf || echo .)' # The "|| echo ." makes it so if we cancel the fzf command, we don't change to a diff directory
 alias xclip='xclip -selection clipboard'
