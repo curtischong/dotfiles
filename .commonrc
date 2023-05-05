@@ -26,12 +26,12 @@ function _cdd {
     builtin cd $@ &&
     pwd > ~/.last_dir
 }
-if [ "$PREVIOUSLY_SOURCED" -eq 0 ]; then
+if [ "$PREVIOUSLY_SOURCED" = "0" ]; then
     if [ -f ~/.last_dir ]; then
         _cdd "`cat ~/.last_dir`"
     fi
 fi
-export PREVIOUSLY_SOURCED=1 # Allows us to only cd into the ~/.last_dir IF this is the first time this file was sourced (i.e. when we opened the window)
+export PREVIOUSLY_SOURCED="1" # Allows us to only cd into the ~/.last_dir IF this is the first time this file was sourced (i.e. when we opened the window)
 
 alias cd=_cdd
 alias cdd='cd $(fd --type directory | fzf || echo .)' # The "|| echo ." makes it so if we cancel the fzf command, we don't change to a diff directory
