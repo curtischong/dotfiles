@@ -1,5 +1,5 @@
 source "$HOME/.commonrc"
-alias sr="source $HOME/.zshrc && echo sourced zshrc;" # sr means: source .zshrc
+alias sr="export MANUALLY_SOURCING_RC=true && source $HOME/.zshrc && echo sourced zshrc;" # sr means: source .zshrc
 alias vr="vim $HOME/.zshrc"  # vr means: vim .zshrc
 
 #bindkey -v # for vi in terminal

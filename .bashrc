@@ -1,5 +1,5 @@
 source "$HOME/.commonrc"
-alias sr="source $HOME/.bashrc && echo sourced bashrc;" # sr means: source .bashrc
+alias sr="export MANUALLY_SOURCING_RC=true && source $HOME/.bashrc && echo sourced bashrc;" # sr means: source .bashrc
 alias vr="vim $HOME/.bashrc"  # vr means: vim .bashrc
 
 [[ $- == *i* ]] && stty -ixon # Allows for forward search via ctrl + s
@@ -25,3 +25,4 @@ print_before_the_prompt () { # makes it so the terminal lines have color
 PROMPT_COMMAND=print_before_the_prompt
 
 export PS1='\n->'
+export PATH=$PATH:/home/ec2-user/go/bin
