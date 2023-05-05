@@ -1,7 +1,7 @@
 alias gpl='git pull'
 alias gp='git push && echo "git push"'
 alias gpf='git push --force-with-lease && echo "git push --force-with-lease"'
-alias gps='git push --set-upstream origin "$(git branch --show-current)"'
+alias gps='git push --set-upstream origin "$(git branch --show-current)"' # use this when you push a new branch and git says: "fatal: The current branch kaniko-builds has no upstream branch."
 alias gco='git checkout'
 alias gcob='git checkout -b'
 alias gcm='git commit -m'
