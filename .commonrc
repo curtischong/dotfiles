@@ -1,6 +1,3 @@
-echo ".gitrc sourced in $( TIMEFORMAT=%R; time (source "$HOME/.gitrc") ) seconds"
-echo ".personalrc sourced in $( TIMEFORMAT=%R; time (source "$HOME/.personalrc") ) seconds"
-
 alias vcrc='vim ~/.commonrc'
 alias vgrc='vim ~/.gitrc'
 alias vprc='vim ~/.personalrc'

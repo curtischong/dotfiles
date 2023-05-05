@@ -1,5 +1,3 @@
-echo ".commonrc sourced in $( TIMEFORMAT=%R; time (source "$HOME/.commonrc") 2>&1 ) seconds"
-
 alias sr="source $HOME/.bashrc && echo sourced bashrc;" # sr means: source .bashrc
 alias vr="vim $HOME/.bashrc"  # vr means: vim .bashrc
 
