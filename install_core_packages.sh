@@ -1,4 +1,3 @@
-
 #!/bin/bash
 
 personalrc_location="$HOME/.personalrc";
@@ -54,13 +53,13 @@ $package_manager \
     curl \
     wget \
     xclip `#TODO: check if we can do cat file | xclip -selection clipboard` \
-    fzf `#fuzzy finding` \
     ripgrep `#just faster grep. And prettier coloring I think` \
     `# neovim - not sure if I should uncomment`
 
 $package_manager fd-find || $package_manager fd `#really useful for showing all directories and feeding them into fzf` \
 
 if [ $distro == "macOS" ]; then
+    brew install fzf
     while true; do
         echo "Do you want to install the following packages? (y/n)"
         # disabling zsh-history-substring-search since it doesn't install properly on macOS (calls bash instead of zsh). I also don't think I would care enough to get it working rn
@@ -112,6 +111,9 @@ if [ $distro == "macOS" ]; then
             * ) echo "Please answer yes or no.";;
         esac
     done
+else
+  git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
+  ~/.fzf/install
 fi
 
 if [ $distro == "macOS" ]; then
