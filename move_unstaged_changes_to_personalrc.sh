@@ -21,22 +21,25 @@ function move_unstaged(){
       echo "No unstaged changes in $source"
   else
       # Create a temporary file to store the changes
-      TEMP_FILE=$(mktemp)
+      TEMP_DIFF=$(mktemp)
 
-      # Save unstaged changes in file A to the temporary file
-      git diff --unified=0 -- "$source" > "$TEMP_FILE"
+      # Save unstaged changes in source to the temporary file
+      git diff -- "$source" > "$TEMP_DIFF"
 
-      # Append changes from temporary file to file B
-      cat "$TEMP_FILE" >> "$destination"
+      # cat the file without the first 4 lines, then extract all lines that start with "+", then echo all those lines without the first character
+      echo "$(tail -n +5 $TEMP_DIFF | grep '^+' | cut -c 2-)" >> "$destination"
 
-      # Reset file A to its last committed state
+      # Reset source to its last committed state
       git checkout -- "$source"
 
       # Remove the temporary file
-      rm "$TEMP_FILE"
+      rm "$TEMP_DIFF"
 
       echo "Unstaged changes in $source have been appended to $destination and reset in $source"
   fi
 }
 move_unstaged .bashrc ~/.personalrc
 move_unstaged .zshrc ~/.personalrc
+
+echo "------last 10 lines of ~/.personalrc------"
+tail -n 10 ~/.personalrc
