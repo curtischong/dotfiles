@@ -7,6 +7,20 @@ if [ ! -f "$personalrc_location" ]; then
   exit 1
 fi
 
+# Needed for cdd command (with fuzzy search)
+# We need to install from source since amazon linux doesn't have the binary available
+function install_fd_from_source(){
+  sudo yum install -y gcc
+  git clone --depth 1 https://github.com/sharkdp/fd.git "$HOME/.fd"
+  cd "$HOME/.fd"
+
+  # install rust
+  curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+
+  cargo build --release
+  sudo cp target/release/fd /usr/local/bin/
+}
+
 options=("macOS (brew)" "Debian/Ubuntu (apt-get)" "Fedora (dnf)" "CentOS (yum)" "Arch Linux (pacman)")
 echo "Select your Linux distribution from the following list:"
 PS3="Enter choice number: "
@@ -32,6 +46,7 @@ do
         "CentOS (yum)")
             distro="centos"
             package_manager="sudo yum install -y"
+            install_fd_from_source
             break
             ;;
         "Arch Linux (pacman)")
