@@ -1,3 +1,7 @@
 [user]
   name = Curtis Chong
   email = curtischong5@gmail.com
+[branch]
+    autosetuprebase = always
+[pull]
+    rebase = true
