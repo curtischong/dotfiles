@@ -1,9 +1,7 @@
 source "$HOME/.gitrc"
-source "$HOME/.personalrc"
 
 alias vcrc='vim ~/.commonrc'
 alias vgrc='vim ~/.gitrc'
-alias vprc='vim ~/.personalrc'
 alias vvrc='vim ~/.vimrc'
 
 

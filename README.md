@@ -1,5 +1,10 @@
 # dot_files
 
+### Meaning of each dotfile
+**.commonrc:** Common rc configs that will always be sourced, no matter the operating system,
+**.commonbashrc:** Common rc configs that will always be sourced on bash-based shells.
+**.commonzshrc:** Common rc configs that will always be sourced on zsh-based shells.
+
 ### Installation:
 
 run `sh link_dotfiles.sh` to create symlinks in $HOME to the files in this directory
