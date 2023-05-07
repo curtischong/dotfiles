@@ -1,4 +1,4 @@
-#/bin/sh
+#!/bin/sh
 
 filesToLink=(
   .commonrc
@@ -20,9 +20,9 @@ while true; do
 done
 
 if [ "$env_type" = "bash" ]; then
-  filesToLink+=(".bashrc")
+  filesToLink+=(".commonbashrc")
 else
-  filesToLink+=(".zshrc")
+  filesToLink+=(".commonzshrc")
 fi
 
 # link all files to $HOME directory
@@ -31,11 +31,9 @@ for file in "${filesToLink[@]}"; do
   ln -nfs "$PWD/$file" "$HOME/$file"
 done
 
-# copy rather than moving since we don't want to mess up the githistory of this repo
-cp .personalrc "$HOME/.personalrc"
-
 if [ "$env_type" = "bash" ]; then
+  echo "source $HOME/.commonbashrc" >> "$HOME/.bashrc"
   source "$HOME/.bashrc"
 else
-  source "$HOME/.zshrc"
+  echo "source $HOME/.commonzshrc" >> "$HOME/.zshrc"
 fi

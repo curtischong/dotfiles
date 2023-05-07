@@ -1,11 +1,5 @@
 #!/bin/bash
 
-personalrc_location="$HOME/.personalrc";
-if [ ! -f "$personalrc_location" ]; then
-  echo "Error: .personalrc file not found in home directory."
-  echo "Please run link_dotfiles.sh first."
-  exit 1
-fi
 
 # Needed for cdd command (with fuzzy search)
 # We need to install from source since amazon linux doesn't have the binary available
@@ -58,6 +52,18 @@ do
     esac
 done
 
+if [[ "$distro" == "macOS" ]]; then
+  if ! grep -q ".commonzshrc" ~/.zshrc; then
+      echo "Error: .commonzshrc is not present in .zshrc please run link_dotfiles.sh first"
+      exit 1
+  fi
+else
+  if ! grep -q ".commonbashrc" ~/.bashrc; then
+      echo "Error: .commonbashrc is not present in .bashrc please run link_dotfiles.sh first"
+      exit 1
+  fi
+fi
+
 echo "You have selected $distro"
 
 echo "Installing core packages..."
@@ -84,6 +90,7 @@ else
 fi
 
 if [ $distro == "macOS" ]; then
+    zshrc_location="$HOME/.zshrc";
     while true; do
         echo "Do you want to install the following packages? (y/n)"
         # disabling zsh-history-substring-search since it doesn't install properly on macOS (calls bash instead of zsh). I also don't think I would care enough to get it working rn
@@ -94,19 +101,19 @@ if [ $distro == "macOS" ]; then
                 #brew install zsh-syntax-highlighting zsh-autosuggestions zsh-completions zsh-history-substring-search;
                 brew install zsh-syntax-highlighting zsh-autosuggestions zsh-completions;
 
-                echo '# ---- Start of install_core_packages.sh ----' >> $personalrc_location;
-                echo 'export HOMEBREW_PREFIX=/opt/homebrew' >> $personalrc_location;
-                echo 'export PATH=/opt/homebrew/bin:$PATH' >> $personalrc_location;
+                echo '# ---- Start of install_core_packages.sh ----' >> $zshrc_location;
+                echo 'export HOMEBREW_PREFIX=/opt/homebrew' >> $zshrc_location;
+                echo 'export PATH=/opt/homebrew/bin:$PATH' >> $zshrc_location;
 
                 # https://formulae.brew.sh/formula/zsh-syntax-highlighting
-                echo 'source $HOMEBREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh' >> $personalrc_location;
+                echo 'source $HOMEBREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh' >> $zshrc_location;
 
                 # https://formulae.brew.sh/formula/zsh-autosuggestions
-                echo 'source $HOMEBREW_PREFIX/share/zsh-autosuggestions/zsh-autosuggestions.zsh' >> $personalrc_location;
+                echo 'source $HOMEBREW_PREFIX/share/zsh-autosuggestions/zsh-autosuggestions.zsh' >> $zshrc_location;
                 # If you receive "highlighters directory not found" error message, you may need to add the following to your .zshenv:
                 # export ZSH_HIGHLIGHT_HIGHLIGHTERS_DIR=$HOMEBREW_PREFIX/share/zsh-syntax-highlighting/highlighters
-                echo '# bind CTRL+O to forward-word so we can accept one token at a time (rather than the entire line)' >> $personalrc_location;
-                echo 'bindkey ^O forward-word # https://stackoverflow.com/questions/2212203/moving-a-word-forward-in-z-shell' >> $personalrc_location;
+                echo '# bind CTRL+O to forward-word so we can accept one token at a time (rather than the entire line)' >> $zshrc_location;
+                echo 'bindkey ^O forward-word # https://stackoverflow.com/questions/2212203/moving-a-word-forward-in-z-shell' >> $zshrc_location;
 
                 # https://formulae.brew.sh/formula/zsh-completions
                 echo ' if type brew &>/dev/null; then
@@ -114,7 +121,7 @@ if [ $distro == "macOS" ]; then
 
      autoload -Uz compinit
      compinit
-    fi' >> $personalrc_location;
+    fi' >> $zshrc_location;
                 # You may also need to force rebuild `zcompdump`:
                 # 
                 #     rm -f ~/.zcompdump; compinit
@@ -126,9 +133,9 @@ if [ $distro == "macOS" ]; then
 
 
                 # https://formulae.brew.sh/formula/zsh-history-substring-search
-                # source $HOMEBREW_PREFIX/share/zsh-history-substring-search/zsh-history-substring-search.zsh >> $personalrc_location;
+                # source $HOMEBREW_PREFIX/share/zsh-history-substring-search/zsh-history-substring-search.zsh >> $zshrc_location;
 
-                echo '# ---- End of install_core_packages.sh ----' >> $personalrc_location;
+                echo '# ---- End of install_core_packages.sh ----' >> $zshrc_location;
 
                 break;;
             [Nn]* ) echo "Skipping..."; break;;
@@ -137,8 +144,6 @@ if [ $distro == "macOS" ]; then
     done
 fi
 
-if [ $distro == "macOS" ]; then
-  source "$HOME/.zshrc"
-else
+if [ $distro != "macOS" ]; then
   source "$HOME/.bashrc"
 fi
