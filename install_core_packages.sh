@@ -98,12 +98,12 @@ if [ $distro == "macOS" ]; then
         read -p "zsh-syntax-highlighting, zsh-autosuggestions, zsh-completions: " yn
         case $yn in
             [Yy]* )
-                #brew install zsh-syntax-highlighting zsh-autosuggestions zsh-completions zsh-history-substring-search;
-                brew install zsh-syntax-highlighting zsh-autosuggestions zsh-completions;
-
                 echo '# ---- Start of install_core_packages.sh ----' >> $zshrc_location;
                 echo 'export HOMEBREW_PREFIX=/opt/homebrew' >> $zshrc_location;
                 echo 'export PATH=/opt/homebrew/bin:$PATH' >> $zshrc_location;
+
+                #brew install zsh-syntax-highlighting zsh-autosuggestions zsh-completions zsh-history-substring-search;
+                brew install zsh-syntax-highlighting zsh-autosuggestions zsh-completions;
 
                 # https://formulae.brew.sh/formula/zsh-syntax-highlighting
                 echo 'source $HOMEBREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh' >> $zshrc_location;

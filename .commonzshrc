@@ -24,6 +24,8 @@ _my_make_completion() {
   options=$(grep -oE '^[a-zA-Z0-9_.-]+[:]*[a-zA-Z0-9_.-]+:([^=]|$)' Makefile | sort | uniq | sed 's/[^a-zA-Z0-9_.-]*$//' | sed 's/[\\]//g' | fzf)
   compadd -- ${options}
 }
+autoload -Uz compinit # needed for compdef https://unix.stackexchange.com/questions/339954/zsh-command-not-found-compinstall-compinit-compdef
+compinit
 compdef _my_make_completion make  # Register the completion function with the make command
 
 
