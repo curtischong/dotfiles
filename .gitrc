@@ -5,7 +5,8 @@ alias gps='git push --set-upstream origin "$(git branch --show-current)"' # use 
 alias gco='git checkout'
 alias gcob='git checkout -b'
 alias gcm='git commit -m'
-alias gc='git commit --amend --no-edit --date=now && echo "git commit --amend --no-edit --date=now"'
+alias gca='git commit --amend --date=now' # this is like gc, but we want to edit the commit message
+alias gc='gca --no-edit && echo "git commit --amend --no-edit --date=now"'
 alias gf='git fetch origin && echo "fetched origin"'
 alias grm='gf && git rebase origin/main || git rebase origin/master'
 alias gr='git rebase --onto'
