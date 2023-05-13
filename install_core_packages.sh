@@ -81,13 +81,11 @@ $package_manager \
 
 $package_manager fd-find || $package_manager fd `#really useful for showing all directories and feeding them into fzf` \
 
-if [ $distro == "macOS" ]; then
-  brew install fzf
-else
-  # install fzf like this because ec2 doens't have fzf indexed
-  git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
-  ~/.fzf/install
-fi
+
+# install fzf like this because ec2 doens't have fzf indexed (also because I want it to change my bash configs to enable history search with fzf)
+git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
+~/.fzf/install
+
 
 if [ $distro == "macOS" ]; then
     zshrc_location="$HOME/.zshrc";
