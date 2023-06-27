@@ -2,7 +2,9 @@
 
 ### Meaning of each dotfile
 **.commonrc:** Common rc configs that will always be sourced, no matter the operating system,
+
 **.commonbashrc:** Common rc configs that will always be sourced on bash-based shells.
+
 **.commonzshrc:** Common rc configs that will always be sourced on zsh-based shells.
 
 ### Installation:
