@@ -20,17 +20,16 @@ alias cl="clear && printf '\e[3J'"
 set -o vi # enables vi mode in terminal
 
 # Open new terminal in same directory as last terminal:
-function _cdd {
-    builtin cd $@ &&
+function cd(){
+    builtin cd "$@" &&
     pwd > ~/.last_dir
 }
 if [ "$MANUALLY_SOURCING_RC" != "true" ]; then
     if [ -f ~/.last_dir ]; then
-        _cdd "`cat ~/.last_dir`"
+        cd "`cat ~/.last_dir`"
     fi
 fi
 
-alias cd=_cdd
 alias cdd='cd $(fd --type directory | fzf || echo .)' # The "|| echo ." makes it so if we cancel the fzf command, we don't change to a diff directory
 alias xclip='xclip -selection clipboard'
 
