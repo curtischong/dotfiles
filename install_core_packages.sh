@@ -79,6 +79,7 @@ $package_manager \
     ripgrep `#just faster grep. And prettier coloring I think` \
     `# neovim - not sure if I should uncomment`
 
+# note: you can install via: npm install -g fd-find
 $package_manager fd-find || $package_manager fd `#really useful for showing all directories and feeding them into fzf` \
 
 
