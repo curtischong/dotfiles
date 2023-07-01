@@ -13,6 +13,7 @@ function install_fd_from_source(){
   cargo install fd-find
 }
 
+
 options=("macOS (brew)" "Debian/Ubuntu (apt-get)" "Fedora (dnf)" "CentOS (yum)" "Arch Linux (pacman)")
 echo "Select your Linux distribution from the following list:"
 PS3="Enter choice number: "
@@ -63,6 +64,11 @@ else
 fi
 
 echo "You have selected $distro"
+
+echo "installing diff so fancy"
+cd ~
+sudo git clone https://github.com/so-fancy/diff-so-fancy.git .diff-so-fancy
+
 
 echo "Installing core packages..."
 $package_manager \
