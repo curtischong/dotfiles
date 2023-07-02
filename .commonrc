@@ -19,9 +19,6 @@ export LSCOLORS=GxFxCxDxBxegedabagaced
 alias cl="clear && printf '\e[3J'"
 set -o vi # enables vi mode in terminal
 
-# for diff-so-fancy. This is installed via the install script
-PATH="$HOME/.diff-so-fancy/:$PATH"
-
 # Open new terminal in same directory as last terminal:
 function cd(){
     builtin cd "$@" &&
