@@ -13,6 +13,15 @@ function install_fd_from_source(){
   cargo install fd-find
 }
 
+function install_fd_from_bin(){
+  # assume we're running bash
+  cd ~
+  sudo wget fd-v8.7.0-arm-unknown-linux-gnueabihf.tar.gz
+  tar -xzf fd-v8.7.0-arm-unknown-linux-musleabihf.tar.gz
+  mv fd-v8.7.0-arm-unknown-linux-musleabihf .fd-find
+  echo 'PATH="$HOME/.fd-find/:$PATH"' >> ~/.bashrc
+}
+
 
 options=("macOS (brew)" "Debian/Ubuntu (apt-get)" "Fedora (dnf)" "CentOS (yum)" "Arch Linux (pacman)")
 echo "Select your Linux distribution from the following list:"
@@ -39,7 +48,7 @@ do
         "CentOS (yum)")
             distro="centos"
             package_manager="sudo yum install -y"
-            install_fd_from_source
+            install_fd_from_bin
             break
             ;;
         "Arch Linux (pacman)")
@@ -65,10 +74,13 @@ fi
 
 echo "You have selected $distro"
 
-echo "installing diff so fancy"
-cd ~
-sudo git clone https://github.com/so-fancy/diff-so-fancy.git .diff-so-fancy
 
+if [ $distro != "macOS" ]; then
+  echo "installing diff so fancy"
+  cd ~
+  sudo git clone https://github.com/so-fancy/diff-so-fancy.git .diff-so-fancy
+  echo 'PATH="$HOME/.fd-find/:$PATH"' >> ~/.bashrc
+fi
 
 echo "Installing core packages..."
 $package_manager \
