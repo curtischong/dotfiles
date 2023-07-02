@@ -1,6 +1,7 @@
 " Plugins to install
 " Vim surround
-colo ron
+" colo ron
+colorscheme default " set the colorscheme to the default colors
 set number relativenumber
 augroup numbertoggle
 autocmd!
