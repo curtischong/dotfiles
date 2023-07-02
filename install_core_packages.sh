@@ -85,17 +85,16 @@ if [ $distro != "macOS" ]; then
 fi
 
 echo "Installing core packages..."
-$package_manager \
-    git `#dont need to install git cause you needed git to install this repo` \
-    htop \
-    vim \
-    tmux \
-    curl \
-    patch \
-    wget \
-    xclip `#TODO: check if we can do cat file | xclip -selection clipboard` \
-    ripgrep `#just faster grep. And prettier coloring I think` \
-    `# neovim - not sure if I should uncomment`
+$package_manager git `#dont need to install git cause you needed git to install this repo`
+$package_manager htop
+$package_manager vim
+$package_manager tmux
+$package_manager curl
+$package_manager patch
+$package_manager wget
+$package_manager xclip `#TODO: check if we can do cat file | xclip -selection clipboard`
+$package_manager ripgrep  `#just faster grep. And prettier coloring I think` 
+$package_manager `#neovim - not sure if I should uncomment`
 
 $package_manager fd-find || $package_manager fd `#really useful for showing all directories and feeding them into fzf` \
 
