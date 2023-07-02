@@ -28,8 +28,20 @@ function install_fd_from_bin(){
 
 function install_fd_from_prebuild_bin(){
   cp -r .fd-find-amazon-ec2-linux-2023 ~/
+  echo 'PATH="$HOME/.fd-find-amazon-ec2-linux-2023/:$PATH"' >> ~/.bashrc
 }
 
+function install_rg_for_centos(){
+  # doesn't work :(
+  sudo yum-config-manager --add-repo=https://copr.fedorainfracloud.org/coprs/carlwgeorge/ripgrep/repo/epel-7/carlwgeorge-ripgrep-epel-7.repo
+  sudo yum install ripgrep
+}
+
+function install_rg_from_prebuild_bin(){
+  # I just prebuild it from cargo and just saved the binary
+  cp -r .rg-amazon-ec2-linux-2023 ~/
+  echo 'PATH="$HOME/.rg-amazon-ec2-linux-2023/:$PATH"' >> ~/.bashrc
+}
 
 options=("macOS (brew)" "Debian/Ubuntu (apt-get)" "Fedora (dnf)" "CentOS (yum)" "Arch Linux (pacman)")
 echo "Select your Linux distribution from the following list:"
@@ -56,7 +68,8 @@ do
         "CentOS (yum)")
             distro="centos"
             package_manager="sudo yum install -y"
-            # install_fd_from_source # we aren't installing from source since it's too long
+            #sudo yum install yum-utils # so we can use yum-config-manager. Commented for now since nothing uses it
+            install_rg_from_prebuild_bin
             install_fd_from_prebuild_bin
             break
             ;;
