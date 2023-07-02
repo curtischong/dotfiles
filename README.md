@@ -69,3 +69,6 @@ also figure out how to export zsh config
 
 ##### IDEAVim
   - You may need to restart the IDE.
+
+##### How to add new packages to Amazon Linux when they are NOT available by the package manager
+- The best way to do this is to just build the package from source (using cargo build for example), then put it into a directory in this repo, and just copy it over into the user's root directory in the install script. Don't forget to add the directory into the user's PATH!
