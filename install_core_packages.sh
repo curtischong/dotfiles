@@ -14,6 +14,7 @@ function install_fd_from_source(){
 }
 
 function install_fd_from_bin(){
+  # currently doesn't run on centos :(
   echo "installing fd from bin"
   # assume we're running bash
   cd ~
@@ -50,7 +51,7 @@ do
         "CentOS (yum)")
             distro="centos"
             package_manager="sudo yum install -y"
-            install_fd_from_bin
+            install_fd_from_source
             break
             ;;
         "Arch Linux (pacman)")
