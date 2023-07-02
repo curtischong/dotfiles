@@ -1,7 +1,7 @@
 " Plugins to install
 " Vim surround
 " colo ron
-colorscheme default " set the colorscheme to the default colors
+colorscheme default " set the colorscheme to the default colorscheme of your terminal
 set number relativenumber
 augroup numbertoggle
 autocmd!
