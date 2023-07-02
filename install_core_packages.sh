@@ -9,6 +9,7 @@ function install_fd_from_source(){
 
   # install rust
   curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+  source ~/.bashrc
   echo "installing fd from source"
   cargo install fd-find
 }
@@ -23,6 +24,10 @@ function install_fd_from_bin(){
   rm fd-v8.7.0-arm-unknown-linux-musleabihf.tar.gz
   mv fd-v8.7.0-arm-unknown-linux-musleabihf .fd-find
   echo 'PATH="$HOME/.fd-find/:$PATH"' >> ~/.bashrc
+}
+
+function install_fd_from_prebuild_bin(){
+  cp -r .fd-find-amazon-ec2-linux-2023 ~/
 }
 
 
@@ -51,7 +56,8 @@ do
         "CentOS (yum)")
             distro="centos"
             package_manager="sudo yum install -y"
-            install_fd_from_source
+            # install_fd_from_source # we aren't installing from source since it's too long
+            install_fd_from_prebuild_bin
             break
             ;;
         "Arch Linux (pacman)")
