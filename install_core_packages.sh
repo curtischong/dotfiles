@@ -14,12 +14,13 @@ function install_fd_from_source(){
 }
 
 function install_fd_from_bin(){
+  echo "installing fd from bin"
   # assume we're running bash
   cd ~
   sudo wget https://github.com/sharkdp/fd/releases/download/v8.7.0/fd-v8.7.0-arm-unknown-linux-gnueabihf.tar.gz
-  tar -xzf fd-v8.7.0-arm-unknown-linux-musleabihf.tar.gz
-  rm fd-v8.7.0-arm-unknown-linux-musleabihf.tar.gz
-  mv fd-v8.7.0-arm-unknown-linux-musleabihf .fd-find
+  tar -xzf fd-v8.7.0-arm-unknown-linux-gnueabihf.tar.gz
+  rm fd-v8.7.0-arm-unknown-linux-gnueabihf.tar.gz -y
+  mv fd-v8.7.0-arm-unknown-linux-gnueabihf .fd-find
   echo 'PATH="$HOME/.fd-find/:$PATH"' >> ~/.bashrc
 }
 
@@ -101,7 +102,7 @@ $package_manager fd-find || $package_manager fd `#really useful for showing all 
 
 # install fzf like this because ec2 doens't have fzf indexed (also because I want it to change my bash configs to enable history search with fzf)
 git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
-~/.fzf/install
+~/.fzf/install --all
 
 
 if [ $distro == "macOS" ]; then
