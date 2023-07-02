@@ -17,10 +17,10 @@ function install_fd_from_bin(){
   echo "installing fd from bin"
   # assume we're running bash
   cd ~
-  sudo wget https://github.com/sharkdp/fd/releases/download/v8.7.0/fd-v8.7.0-arm-unknown-linux-gnueabihf.tar.gz
-  tar -xzf fd-v8.7.0-arm-unknown-linux-gnueabihf.tar.gz
-  rm fd-v8.7.0-arm-unknown-linux-gnueabihf.tar.gz -y
-  mv fd-v8.7.0-arm-unknown-linux-gnueabihf .fd-find
+  sudo wget https://github.com/sharkdp/fd/releases/download/v8.7.0/fd-v8.7.0-arm-unknown-linux-musleabihf.tar.gz
+  tar -xzf fd-v8.7.0-arm-unknown-linux-musleabihf.tar.gz
+  rm fd-v8.7.0-arm-unknown-linux-musleabihf.tar.gz
+  mv fd-v8.7.0-arm-unknown-linux-musleabihf .fd-find
   echo 'PATH="$HOME/.fd-find/:$PATH"' >> ~/.bashrc
 }
 
