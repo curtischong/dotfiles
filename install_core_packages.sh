@@ -16,8 +16,9 @@ function install_fd_from_source(){
 function install_fd_from_bin(){
   # assume we're running bash
   cd ~
-  sudo wget fd-v8.7.0-arm-unknown-linux-gnueabihf.tar.gz
+  sudo wget https://github.com/sharkdp/fd/releases/download/v8.7.0/fd-v8.7.0-arm-unknown-linux-gnueabihf.tar.gz
   tar -xzf fd-v8.7.0-arm-unknown-linux-musleabihf.tar.gz
+  rm fd-v8.7.0-arm-unknown-linux-musleabihf.tar.gz
   mv fd-v8.7.0-arm-unknown-linux-musleabihf .fd-find
   echo 'PATH="$HOME/.fd-find/:$PATH"' >> ~/.bashrc
 }
@@ -79,7 +80,7 @@ if [ $distro != "macOS" ]; then
   echo "installing diff so fancy"
   cd ~
   sudo git clone https://github.com/so-fancy/diff-so-fancy.git .diff-so-fancy
-  echo 'PATH="$HOME/.fd-find/:$PATH"' >> ~/.bashrc
+  echo 'PATH="$HOME/.diff-so-fancy/:$PATH"' >> ~/.bashrc
 fi
 
 echo "Installing core packages..."
