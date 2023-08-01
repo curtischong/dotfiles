@@ -20,4 +20,33 @@ alias ga='git add'
 alias gd='git diff'
 
 # TODO: use rg over grep?
-alias rmoldbranches='git branch --merged | grep -v \* | xargs git branch -D'
+# alias rmoldbranches='git branch --merged | grep -v \* | xargs git branch -D'
+# alias rmoldbranches='git branch --merged main | grep -v "^\* main" | xargs -n 1 -r git branch -d'
+# alias rmoldbranches="git branch --merged | grep -v '\*\|master\|main\|develop' | xargs -n 1 git branch -d"
+alias rmoldbranches='git branch --merged | egrep -v "(^\*|master|main|dev)" | xargs git branch -d'
+
+# Define the alias to rename the Git branch and remote
+alias rename-branch='rename_branch'
+
+# Function to rename the current branch and its remote counterpart
+rename_branch() {
+    if [ "$#" -ne 1 ]; then
+        echo "Usage: git-rename-branch NEW_BRANCH_NAME"
+        return 1
+    fi
+
+    local new_branch="$1"
+    local current_branch=$(git rev-parse --abbrev-ref HEAD)
+
+    if [ "$current_branch" = "HEAD" ]; then
+        echo "Cannot rename detached HEAD. Switch to a branch first."
+        return 1
+    fi
+
+    # Rename the local branch
+    git branch -m "$new_branch"
+
+    git push --set-upstream origin "$new_branch"
+    git push origin --delete "$current_branch"
+}
+
