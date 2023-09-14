@@ -42,3 +42,5 @@ alias svv='source .venv/bin/activate; echo activated venv on $(which python) $(p
 alias rg="rg --color=always"
 # qf stands for quick find
 alias qf='rg --column --line-number --no-heading --color=always --smart-case | fzf --ansi --height=50% --layout=reverse'
+alias killport='function _killport() { lsof -i :$1 | awk '\''NR > 1 {print $2}'\'' | xargs -I {} kill -9 {}; };_killport'
+
