@@ -7,6 +7,7 @@ filesToLink=(
   .vimrc
   .tmux.conf
   .ideavimrc
+  nuke-local-branches.sh
 )
 
 # ask the user if they want to use zsh or bash
