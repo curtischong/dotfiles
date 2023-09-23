@@ -1,5 +1,12 @@
 #!/bin/bash
 
+# This is a useful script to remove old branches you're done with.
+#
+# This script finds all branches on your computer that are not present on the remote branch or are unmerged
+# Next, this script will list them all out to you and ask you to select the branches on your local computer that
+# you want to keep. The script will delete the other branches
+
+
 # Fetch the remote branches
 git fetch
 
