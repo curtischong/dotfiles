@@ -9,7 +9,7 @@ local_branches=$(git branch | tr -d '* ' | tr '\n' ' ')
 # Filter branches that are either missing on the remote repo or are unmerged
 filtered_branches=()
 for branch in $local_branches; do
-    if [[ "$branch" != "main" ]] && 
+    if [[ "$branch" != "main" ]] &&
         { ! git ls-remote --heads origin "$branch" &> /dev/null || ! git branch --merged | grep -q "$branch"; }; then
         filtered_branches+=($branch)
     fi
@@ -34,7 +34,14 @@ while true; do
         echo "Invalid choice. Please try again."
     elif [[ ! " ${branches_to_keep[@]} " =~ " $branch_number " ]]; then
         branches_to_keep+=($branch_number)
-        echo "Branch kept: ${filtered_branches[$branch_number-1]}"
+        echo "-------Branch kept: ${filtered_branches[$branch_number-1]}"
+
+        echo "-------The branches you are keeping are:"
+        for i in "${branches_to_keep[@]}"; do
+            echo "${filtered_branches[$i-1]}"
+        done
+        echo "-------"
+
     else
         echo "You've already selected this branch to keep."
     fi
