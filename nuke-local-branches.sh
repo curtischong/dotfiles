@@ -2,7 +2,7 @@
 
 # This is a useful script to remove old branches you're done with.
 #
-# This script finds all branches on your computer that are not present on the remote branch or are unmerged
+# This script finds all branches on your computer that are not present on the remote branch
 # Next, this script will list them all out to you and ask you to select the branches on your local computer that
 # you want to keep. The script will delete the other branches
 
@@ -10,20 +10,26 @@
 # Fetch the remote branches
 git fetch
 
-# Get all local branches
-local_branches=$(git branch | tr -d '* ' | tr '\n' ' ')
 
-# Filter branches that are either missing on the remote repo or are unmerged
+# Get all local branches
+local_branches=$(git branch --format="%(refname:short)")
+
+# Filter branches that are missing on the remote repo
 filtered_branches=()
-for branch in $local_branches; do
-    if [[ "$branch" != "main" ]] &&
-        { ! git ls-remote --heads origin "$branch" &> /dev/null || ! git branch --merged | grep -q "$branch"; }; then
-        filtered_branches+=($branch)
-    fi
+
+# Iterate over local branches
+for branch in $local_branches
+do
+   # Check if the local branch exists on the remote
+   if ! git ls-remote --exit-code --heads origin "$branch" &>/dev/null
+   then
+       filtered_branches+=("$branch")
+   fi
 done
 
+
 # Print the branches and their corresponding numbers
-echo "The following branches are either not present on the remote or not merged:"
+echo "The following branches are not present on the remote:"
 index=1
 for branch in "${filtered_branches[@]}"; do
     echo "$index. $branch"
