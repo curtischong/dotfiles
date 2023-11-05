@@ -24,7 +24,7 @@ alias gd='git diff'
 # alias rmoldbranches='git branch --merged main | grep -v "^\* main" | xargs -n 1 -r git branch -d'
 # alias rmoldbranches="git branch --merged | grep -v '\*\|master\|main\|develop' | xargs -n 1 git branch -d"
 alias rmoldbranches='git fetch --prune && git branch --merged | egrep -v "(^\*|master|main|dev)" | xargs git branch -d'
-alias nukebranches='sh ~/nuke-local-branches.sh'
+alias nukebranches='sh rmoldbranches && sh ~/nuke-local-branches.sh'
 
 # Define the alias to rename the Git branch and remote
 alias rename-branch='rename_branch'
