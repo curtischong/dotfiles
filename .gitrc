@@ -18,6 +18,8 @@ alias gl='git log'
 alias gs='git status'
 alias ga='git add'
 alias gd='git diff'
+alias gsc='scommit'
+alias gsca='scommit -a'
 
 # TODO: use rg over grep?
 # alias rmoldbranches='git branch --merged | grep -v \* | xargs git branch -D'
@@ -50,4 +52,3 @@ rename_branch() {
     git push --set-upstream origin "$new_branch"
     git push origin --delete "$current_branch"
 }
-
