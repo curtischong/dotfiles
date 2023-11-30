@@ -44,3 +44,5 @@ alias rg="rg --color=always"
 alias qf='rg --column --line-number --no-heading --color=always --smart-case | fzf --ansi --height=50% --layout=reverse'
 alias killport='function _killport() { lsof -i :$1 | awk '\''NR > 1 {print $2}'\'' | xargs -I {} kill -9 {}; };_killport'
 
+alias stopdocker='docker stop $(docker ps -a -q)'
+alias rmdocker='docker rm $(docker ps -a -q)'
