@@ -52,6 +52,7 @@ do
         "Debian/Ubuntu (apt-get)")
             distro="debian/ubuntu"
             package_manager="sudo apt-get install -y"
+            sudo snap install ripgrep --classic
             break
             ;;
         "Fedora (dnf)")
