@@ -11,14 +11,16 @@ filesToLink=(
 )
 
 # ask the user if they want to use zsh or bash
-while true; do
-  read -p "zsh or bash? (zsh/bash):" env_type
-  if [ "$env_type" = "zsh" ] || [ "$env_type" = "bash" ]; then
-    break
-  else
-    echo "Invalid input. Please try again."
-  fi
-done
+# while true; do
+#   read -p "zsh or bash? (zsh/bash):" env_type
+#   if [ "$env_type" = "zsh" ] || [ "$env_type" = "bash" ]; then
+#     break
+#   else
+#     echo "Invalid input. Please try again."
+#   fi
+# done
+
+env_type="$(basename $SHELL)"
 
 if [ "$env_type" = "bash" ]; then
   filesToLink+=(".commonbashrc")
@@ -37,4 +39,5 @@ if [ "$env_type" = "bash" ]; then
   source "$HOME/.bashrc"
 else
   echo "source $HOME/.commonzshrc" >> "$HOME/.zshrc"
+  source "$HOME/.zshrc"
 fi
