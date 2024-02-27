@@ -20,7 +20,7 @@ alias cl="clear && printf '\e[3J'"
 set -o vi # enables vi mode in terminal
 
 export PATH="$HOME/.local/bin:$PATH"
-eval "$(zoxide init zsh)"
+eval "$(zoxide init $0)" # use $0 since it'll change the shell to zsh or bash
 function cd(){
      z "$@" &&
      pwd > "$HOME/.last_dir"
