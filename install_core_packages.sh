@@ -77,17 +77,48 @@ do
     esac
 done
 
-if [[ "$distro" == "macOS" ]]; then
-  if ! grep -q ".commonzshrc" ~/.zshrc; then
-      echo "Error: .commonzshrc is not present in .zshrc please run link_dotfiles.sh first"
+
+function link_dotfiles(){
+  filesToLink=(
+    .commonrc
+    .gitrc
+    .gitconfig
+    .vimrc
+    .tmux.conf
+    .ideavimrc
+    nuke-local-branches.sh
+  )
+
+  env_type="$(basename $SHELL)"
+
+  if [[ "$env_type" != "bash" && "$env_type" != "zsh" ]]; then
+      echo "Error: run this script using 'bash' or 'zsh'" >&2
       exit 1
   fi
-else
-  if ! grep -q ".commonbashrc" ~/.bashrc; then
-      echo "Error: .commonbashrc is not present in .bashrc please run link_dotfiles.sh first"
-      exit 1
+
+
+  if [ "$env_type" = "bash" ]; then
+    filesToLink+=(".commonbashrc")
+  else
+    filesToLink+=(".commonzshrc")
   fi
-fi
+
+  # link all files to $HOME directory
+  # https://opensource.com/article/19/3/move-your-dotfiles-version-control
+  for file in "${filesToLink[@]}"; do
+    ln -nfs "$PWD/$file" "$HOME/$file"
+  done
+
+  if [ "$env_type" = "bash" ]; then
+    echo "source $HOME/.commonbashrc" >> "$HOME/.bashrc"
+    source "$HOME/.bashrc"
+  else
+    echo "source $HOME/.commonzshrc" >> "$HOME/.zshrc"
+    source "$HOME/.zshrc"
+  fi
+}
+
+link_dotfiles
 
 echo "You have selected $distro"
 
@@ -113,8 +144,7 @@ $package_manager `#neovim - not sure if I should uncomment`
 
 $package_manager fd-find || $package_manager fd `#really useful for showing all directories and feeding them into fzf` \
 sudo mkdir -p "$HOME/.local/bin"
-export PATH="/usr/bin:$PATH"
-ln -s $(which fdfind) "$HOME/.local/bin/fd" # link the fd-find binary to fd
+ln -s $(export PATH="/usr/bin:$PATH" && which fdfind) "$HOME/.local/bin/fd" # link the fd-find binary to fd
 
 # install zoxide
 curl -sS https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | bash
