@@ -19,12 +19,19 @@ export LSCOLORS=GxFxCxDxBxegedabagaced
 alias cl="clear && printf '\e[3J'"
 set -o vi # enables vi mode in terminal
 
-# Open new terminal in same directory as last terminal:
+export PATH="$HOME/.local/bin:$PATH"
+eval "$(zoxide init zsh)"
 function cd(){
-    builtin cd "$@" &&
-    pwd > ~/.last_dir
+     z "$@" &&
+     pwd > "$HOME/.last_dir"
 }
+function ccd(){
+     zi "$@" &&
+     pwd > "$HOME/.last_dir"
+}
+
 if [ "$MANUALLY_SOURCING_RC" != "true" ]; then
+    ## Open new terminal in same directory as last terminal:
     if [ -f ~/.last_dir ]; then
         cd "`cat ~/.last_dir`"
     fi
