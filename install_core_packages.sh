@@ -52,6 +52,7 @@ do
         "Debian/Ubuntu (apt-get)")
             distro="debian/ubuntu"
             package_manager="sudo apt-get install -y"
+            sudo apt update # so we can find binaries like fd-find
             sudo snap install ripgrep --classic
             break
             ;;
@@ -111,6 +112,7 @@ $package_manager ripgrep  `#just faster grep. And prettier coloring I think`
 $package_manager `#neovim - not sure if I should uncomment`
 
 $package_manager fd-find || $package_manager fd `#really useful for showing all directories and feeding them into fzf` \
+mkdir -p ~/.local/bin && ln -s $(which fdfind) ~/.local/bin/fd # link the fd-find binary to fd
 
 # install zoxide
 curl -sS https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | bash
