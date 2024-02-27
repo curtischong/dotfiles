@@ -117,7 +117,7 @@ mkdir -p ~/.local/bin && ln -s $(which fdfind) ~/.local/bin/fd # link the fd-fin
 # install zoxide
 curl -sS https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | bash
 export PATH="$HOME/.local/bin:$PATH"
-eval "$(zoxide init $(basename $SHELL))" # use $SHELL to make this work for zsh or bash
+zoxide init $(basename $SHELL) # use $SHELL to make this work for zsh or bash
 
 
 
