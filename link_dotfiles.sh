@@ -10,17 +10,13 @@ filesToLink=(
   nuke-local-branches.sh
 )
 
-# ask the user if they want to use zsh or bash
-# while true; do
-#   read -p "zsh or bash? (zsh/bash):" env_type
-#   if [ "$env_type" = "zsh" ] || [ "$env_type" = "bash" ]; then
-#     break
-#   else
-#     echo "Invalid input. Please try again."
-#   fi
-# done
-
 env_type="$(basename $SHELL)"
+
+if [[ "$env_type" != "bash" && "$env_type" != "zsh" ]]; then
+    echo "Error: run this script using 'bash' or 'zsh'" >&2
+    exit 1
+fi
+
 
 if [ "$env_type" = "bash" ]; then
   filesToLink+=(".commonbashrc")
