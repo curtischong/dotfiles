@@ -37,47 +37,6 @@ function install_rg_for_centos(){
   sudo yum install ripgrep
 }
 
-options=("macOS (brew)" "Debian/Ubuntu (apt-get)" "Fedora (dnf)" "CentOS (yum)" "Arch Linux (pacman)")
-echo "Select your Linux distribution from the following list:"
-PS3="Enter choice number: "
-
-select opt in "${options[@]}"
-do
-    case $opt in
-        "macOS (brew)")
-            distro="macOS"
-            package_manager="brew install"
-            break
-            ;;
-        "Debian/Ubuntu (apt-get)")
-            distro="debian/ubuntu"
-            package_manager="sudo apt-get install -y"
-            sudo apt update # so we can find binaries like fd-find
-            sudo snap install ripgrep --classic
-            break
-            ;;
-        "Fedora (dnf)")
-            distro="fedora"
-            package_manager="sudo dnf install -y"
-            break
-            ;;
-        "CentOS (yum)")
-            distro="centos"
-            package_manager="sudo yum install -y"
-            #sudo yum install yum-utils # so we can use yum-config-manager. Commented for now since nothing uses it
-            install_ec2_linux_prebuild_bin
-            break
-            ;;
-        "Arch Linux (pacman)")
-            distro="arch linux"
-            package_manager="sudo pacman install -y"
-            break
-            ;;
-        *) echo "Invalid input. Please choose a number between 1 and ${#options[@]}";;
-    esac
-done
-
-
 function link_dotfiles(){
   filesToLink=(
     .commonrc
@@ -119,6 +78,46 @@ function link_dotfiles(){
 }
 
 link_dotfiles
+
+options=("macOS (brew)" "Debian/Ubuntu (apt-get)" "Fedora (dnf)" "CentOS (yum)" "Arch Linux (pacman)")
+echo "Select your Linux distribution from the following list:"
+PS3="Enter choice number: "
+
+select opt in "${options[@]}"
+do
+    case $opt in
+        "macOS (brew)")
+            distro="macOS"
+            package_manager="brew install"
+            break
+            ;;
+        "Debian/Ubuntu (apt-get)")
+            distro="debian/ubuntu"
+            package_manager="sudo apt-get install -y"
+            sudo apt update # so we can find binaries like fd-find
+            sudo snap install ripgrep --classic
+            break
+            ;;
+        "Fedora (dnf)")
+            distro="fedora"
+            package_manager="sudo dnf install -y"
+            break
+            ;;
+        "CentOS (yum)")
+            distro="centos"
+            package_manager="sudo yum install -y"
+            #sudo yum install yum-utils # so we can use yum-config-manager. Commented for now since nothing uses it
+            install_ec2_linux_prebuild_bin
+            break
+            ;;
+        "Arch Linux (pacman)")
+            distro="arch linux"
+            package_manager="sudo pacman install -y"
+            break
+            ;;
+        *) echo "Invalid input. Please choose a number between 1 and ${#options[@]}";;
+    esac
+done
 
 echo "You have selected $distro"
 
