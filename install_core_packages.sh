@@ -143,8 +143,6 @@ $package_manager ripgrep  `#just faster grep. And prettier coloring I think`
 $package_manager `#neovim - not sure if I should uncomment`
 
 $package_manager fd-find || $package_manager fd `#really useful for showing all directories and feeding them into fzf` \
-sudo mkdir -p "$HOME/.local/bin"
-ln -s $(export PATH="/usr/bin:$PATH" && which fdfind) "$HOME/.local/bin/fd" # link the fd-find binary to fd
 
 # install zoxide
 curl -sS https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | bash
@@ -214,3 +212,4 @@ fi
 if [ $distro != "macOS" ]; then
   source "$HOME/.bashrc"
 fi
+sudo mkdir -p "$HOME/.local/bin" && ln -s $(export PATH="/usr/bin:$PATH" && which fdfind) "$HOME/.local/bin/fd" # link the fd-find binary to fd
