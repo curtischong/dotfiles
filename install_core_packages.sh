@@ -113,12 +113,13 @@ $package_manager `#neovim - not sure if I should uncomment`
 
 $package_manager fd-find || $package_manager fd `#really useful for showing all directories and feeding them into fzf` \
 sudo mkdir -p "$HOME/.local/bin"
+export PATH="/usr/bin:$PATH"
 ln -s $(which fdfind) "$HOME/.local/bin/fd" # link the fd-find binary to fd
 
 # install zoxide
 curl -sS https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | bash
-export PATH="$HOME/.local/bin:$PATH"
-$HOME/.local/bin/zoxide init $(basename $SHELL) # use $SHELL to make this work for zsh or bash
+#export PATH="$HOME/.local/bin:$PATH"
+#$HOME/.local/bin/zoxide init $(basename $SHELL) # use $SHELL to make this work for zsh or bash
 
 
 

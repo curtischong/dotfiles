@@ -40,3 +40,14 @@ function parse_git_branch() {
 setopt prompt_subst # ensure prompt is reevaluated each time https://stackoverflow.com/questions/39689789/zsh-setopt-prompt-subst-not-working
 PS1='$(printf "\e[1;31m%s: \e[1;33m%s \e[1;92m%s \e[1;0m"  "$USER" "$PWD" "$(parse_git_branch)")
 ->'
+
+export PATH="$HOME/.local/bin:$PATH"
+eval "$(zoxide init zsh)"
+function cd(){
+     z "$@" &&
+     pwd > "$HOME/.last_dir"
+}
+function ccd(){
+     zi "$@" &&
+     pwd > "$HOME/.last_dir"
+}
