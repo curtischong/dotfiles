@@ -28,6 +28,7 @@ PROMPT_COMMAND=print_before_the_prompt
 export PS1='\n->'
 export PATH=$PATH:/home/ec2-user/go/bin
 
+# I tried putting this logic in .commonrc but it didn't work. it needs to be sourced at the end of the .bashrc file
 export PATH="$HOME/.local/bin:$PATH"
 eval "$(zoxide init bash)"
 function cd(){

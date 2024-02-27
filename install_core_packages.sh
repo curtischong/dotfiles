@@ -118,8 +118,6 @@ ln -s $(which fdfind) "$HOME/.local/bin/fd" # link the fd-find binary to fd
 
 # install zoxide
 curl -sS https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | bash
-#export PATH="$HOME/.local/bin:$PATH"
-#$HOME/.local/bin/zoxide init $(basename $SHELL) # use $SHELL to make this work for zsh or bash
 
 
 
