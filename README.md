@@ -9,7 +9,9 @@
 
 ### Installation:
 
-run `sh link_dotfiles.sh` to create symlinks in $HOME to the files in this directory
+run `bash setup_machine.sh` to:
+1) create symlinks in $HOME to the files in this directory
+2) install the core packages
 
 Since the default macOS shell is now zsh, if you want to change the macOS shell to bash, use: https://www.google.com/amp/s/www.howtogeek.com/444596/how-to-change-the-default-shell-to-bash-in-macos-catalina/amp/
 
