@@ -18,6 +18,7 @@ alias gl='git log'
 alias gs='git status'
 alias ga='git add'
 alias gd='git diff'
+alias gb='git branch'
 alias gsc='scommit'
 alias gsca='scommit -a'
 
