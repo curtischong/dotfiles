@@ -130,7 +130,8 @@ $package_manager patch
 $package_manager wget
 $package_manager xclip `#TODO: check if we can do cat file | xclip -selection clipboard`
 $package_manager ripgrep  `#just faster grep. And prettier coloring I think` 
-$package_manager `#neovim - not sure if I should uncomment`
+# not sure if I should uncomment:
+#$package_manager neovim 
 
 $package_manager fd-find || $package_manager fd `#really useful for showing all directories and feeding them into fzf` \
 
