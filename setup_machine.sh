@@ -18,8 +18,7 @@ function install_fd_from_bin(){
   # currently doesn't run on centos :(
   echo "installing fd from bin"
   # assume we're running bash
-  cd ~
-  sudo wget https://github.com/sharkdp/fd/releases/download/v8.7.0/fd-v8.7.0-arm-unknown-linux-musleabihf.tar.gz
+  sudo wget -P ~/ https://github.com/sharkdp/fd/releases/download/v8.7.0/fd-v8.7.0-arm-unknown-linux-musleabihf.tar.gz
   tar -xzf fd-v8.7.0-arm-unknown-linux-musleabihf.tar.gz
   rm fd-v8.7.0-arm-unknown-linux-musleabihf.tar.gz
   mv fd-v8.7.0-arm-unknown-linux-musleabihf .fd-find
@@ -121,11 +120,12 @@ done
 
 echo "You have selected $distro"
 
+# install zoxide first, since if a command runs "cd", we will be able to change directory (since we override cd with zoxide)
+curl -sS https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | bash
 
 if [ $distro != "macOS" ]; then
   echo "installing diff so fancy"
-  cd ~
-  sudo git clone https://github.com/so-fancy/diff-so-fancy.git .diff-so-fancy
+  sudo git clone https://github.com/so-fancy/diff-so-fancy.git ~/.diff-so-fancy
   echo 'PATH="$HOME/.diff-so-fancy/:$PATH"' >> ~/.bashrc
 fi
 
@@ -142,10 +142,6 @@ $package_manager ripgrep  `#just faster grep. And prettier coloring I think`
 $package_manager `#neovim - not sure if I should uncomment`
 
 $package_manager fd-find || $package_manager fd `#really useful for showing all directories and feeding them into fzf` \
-
-# install zoxide
-curl -sS https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | bash
-
 
 
 # install fzf like this because ec2 doens't have fzf indexed (also because I want it to change my bash configs to enable history search with fzf)
