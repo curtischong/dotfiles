@@ -120,15 +120,6 @@ done
 
 echo "You have selected $distro"
 
-# install zoxide first, since if a command runs "cd", we will be able to change directory (since we override cd with zoxide)
-curl -sS https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | bash
-
-if [ $distro != "macOS" ]; then
-  echo "installing diff so fancy"
-  sudo git clone https://github.com/so-fancy/diff-so-fancy.git ~/.diff-so-fancy
-  echo 'PATH="$HOME/.diff-so-fancy/:$PATH"' >> ~/.bashrc
-fi
-
 echo "Installing core packages..."
 $package_manager git `#dont need to install git cause you needed git to install this repo`
 $package_manager htop
@@ -143,6 +134,18 @@ $package_manager `#neovim - not sure if I should uncomment`
 
 $package_manager fd-find || $package_manager fd `#really useful for showing all directories and feeding them into fzf` \
 
+# install zoxide first, since if a command runs "cd", we will be able to change directory (since we override cd with zoxide)
+curl -sSfL https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | sh
+if [ $distro != "macOS" ]; then
+  echo 'eval "$(zoxide init bash)"' >> ~/.bashrc
+  source ~/.bashrc
+fi
+
+if [ $distro != "macOS" ]; then
+  echo "installing diff so fancy"
+  sudo git clone https://github.com/so-fancy/diff-so-fancy.git ~/.diff-so-fancy
+  echo 'PATH="$HOME/.diff-so-fancy/:$PATH"' >> ~/.bashrc
+fi
 
 # install fzf like this because ec2 doens't have fzf indexed (also because I want it to change my bash configs to enable history search with fzf)
 git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
