@@ -20,6 +20,17 @@ Since the default macOS shell is now zsh, if you want to change the macOS shell 
 As of April 2023 I'm not using this.
 `curl https://raw.githubusercontent.com/git/git/master/contrib/completion/git-completion.bash -o ~/.git-completion.bash`
 
+### Other installation
+
+Installing miniconda on ubuntu:
+
+```
+mkdir -p ~/miniconda3
+wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O ~/miniconda3/miniconda.sh
+bash ~/miniconda3/miniconda.sh -b -u -p ~/miniconda3
+rm ~/miniconda3/miniconda.sh
+```
+
 ##### Git
 
 As of April 2023 I'm not using this.
