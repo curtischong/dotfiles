@@ -20,6 +20,7 @@ if [[ "$HOST_ENDPOINT" =~ ^ec2-[0-9-]+\.compute-[0-9]+\.amazonaws\.com$ || "$HOS
 
     # Flag to track whether the specified host has been found
     HOST_FOUND=0
+    FOUND_LINE=0
 
     # Read .ssh/config line by line
     while IFS= read -r line
@@ -27,6 +28,7 @@ if [[ "$HOST_ENDPOINT" =~ ^ec2-[0-9-]+\.compute-[0-9]+\.amazonaws\.com$ || "$HOS
         # Check for the specified host
         if [[ "$line" =~ "Host $HOST_NAME" ]]; then
             HOST_FOUND=1
+            FOUND_LINE=1
             echo "$line" >> "$TMP_FILE"
         elif [[ "$HOST_FOUND" -eq 1 && "$line" =~ HostName ]]; then
             # Update the HostName line
@@ -37,6 +39,12 @@ if [[ "$HOST_ENDPOINT" =~ ^ec2-[0-9-]+\.compute-[0-9]+\.amazonaws\.com$ || "$HOS
             echo "$line" >> "$TMP_FILE"
         fi
     done < ~/.ssh/config
+
+    # if we never found the line, throw
+    if [[ "$FOUND_LINE" != 1 ]]; then
+        echo "never found the corresponding line. is the line prefixed as HOST not Host?" >&2
+        exit 1
+    fi
 
     # Move the temporary file to the original config file location
     mv "$TMP_FILE" ~/.ssh/config
