@@ -52,3 +52,34 @@ function ccd(){
      zi "$@" &&
      pwd > "$HOME/.last_dir"
 }
+
+# Justfile tab completion support
+# https://chatgpt.com/share/67c5255b-1040-800e-a418-02d00ba9e7cd
+# Function to provide fzf-based completions for the "just" command in zsh
+_just_fzf_completion() {
+  # Only trigger if completing the first argument (the task name)
+  if [ $CURRENT -eq 2 ]; then
+    local file="justfile"
+    # Exit if the justfile doesn't exist in the current directory
+    if [[ ! -f $file ]]; then
+      return 1
+    fi
+
+    # Extract task names (assumes tasks are defined as "task:" at the start of a line)
+    local tasks
+    tasks=("${(f)$(grep -E '^[[:alnum:]_-]+:' "$file" | sed 's/://')}")
+    if [ ${#tasks[@]} -eq 0 ]; then
+      return 1
+    fi
+
+    # Use fzf for interactive selection; pass the current word as the query
+    local selection
+    selection=$(printf "%s\n" "${tasks[@]}" | fzf --height 40% --query "$words[CURRENT]")
+    if [[ -n $selection ]]; then
+      compadd -- "$selection"
+    fi
+  fi
+}
+
+# Register the completion function for the "just" command
+compdef _just_fzf_completion just
