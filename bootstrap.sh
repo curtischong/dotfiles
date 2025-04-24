@@ -10,7 +10,7 @@ function install_fd_from_source(){
 
   # install rust
   curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
-  source ~/.bashrc
+  source ~/.zshrc
   echo "installing fd from source"
   cargo install fd-find
 }
@@ -23,12 +23,12 @@ function install_fd_from_bin(){
   tar -xzf fd-v8.7.0-arm-unknown-linux-musleabihf.tar.gz
   rm fd-v8.7.0-arm-unknown-linux-musleabihf.tar.gz
   mv fd-v8.7.0-arm-unknown-linux-musleabihf .fd-find
-  echo 'PATH="$HOME/.fd-find/:$PATH"' >> ~/.bashrc
+  echo 'PATH="$HOME/.fd-find/:$PATH"' >> ~/.zshrc
 }
 
   # I just prebuild it from cargo and just saved the binary
 function install_ec2_linux_prebuild_bin(){
-  echo "PATH=\"$PWD/binaries/amazon-ec2-linux-2023/:\$PATH\"" >> ~/.bashrc
+  echo "PATH=\"$PWD/binaries/amazon-ec2-linux-2023/:\$PATH\"" >> ~/.zshrc
 }
 
 function install_rg_for_centos(){
@@ -103,24 +103,38 @@ $package_manager fd-find || $package_manager fd `#really useful for showing all 
 
 # install zoxide first, since if a command runs "cd", we will be able to change directory (since we override cd with zoxide)
 curl -sSfL https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | sh
-if [ $distro != "macOS" ]; then
-  echo 'eval "$(zoxide init bash)"' >> ~/.bashrc
-  source ~/.bashrc
-fi
+echo 'eval "$(zoxide init zsh)"' >> ~/.zshrc
+# if [ $distro != "macOS" ]; then
+#   echo 'eval "$(zoxide init bash)"' >> ~/.bashrc
+#   source ~/.bashrc
+# fi
 
-if [ $distro != "macOS" ]; then
-  echo "installing diff so fancy"
-  sudo git clone https://github.com/so-fancy/diff-so-fancy.git ~/.diff-so-fancy
-  echo 'PATH="$HOME/.diff-so-fancy/:$PATH"' >> ~/.bashrc
-fi
+cargo install git-delta
+git config --global core.pager delta
+git config --global interactive.diffFilter 'delta --color-only'
+git config --global delta.navigate true
+git config --global merge.conflictStyle zdiff3
+# if [ $distro != "macOS" ]; then
+#   echo "installing diff so fancy"
+#   sudo git clone https://github.com/so-fancy/diff-so-fancy.git ~/.diff-so-fancy
+#   echo 'PATH="$HOME/.diff-so-fancy/:$PATH"' >> ~/.bashrc
+# fi
 
+# fzf is already installed in the system:
 # install fzf like this because ec2 doens't have fzf indexed (also because I want it to change my bash configs to enable history search with fzf)
-git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
-~/.fzf/install --all -y
+# git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
+# ~/.fzf/install --all -y
+mkdir -p $HOME/.local/share/fzf
+wget --directory-prefix=$HOME/.local/share/fzf https://raw.githubusercontent.com/junegunn/fzf/master/shell/key-bindings.zsh
+wget --directory-prefix=$HOME/.local/share/fzf https://raw.githubusercontent.com/junegunn/fzf/master/shell/completion.zsh
+chmod +x $HOME/.local/share/fzf/key-bindings.zsh
+chmod +x $HOME/.local/share/fzf/completion.zsh
+echo 'source $HOME/.local/share/fzf/key-bindings.zsh' >> ~/.zshrc
+echo 'source $HOME/.local/share/fzf/completion.zsh' >> ~/.zshrc
 
-if [ $distro != "macOS" ]; then
-  source "$HOME/.bashrc"
-fi
+# if [ $distro != "macOS" ]; then
+source "$HOME/.zshrc"
+# fi
 # we have to link fd-find to fd here (at the end of the file) rather than right after the install command
 # I think it's because the install command launches an async process to install fd, and by running the ln command here, it is more probable that the install command has finished (so which fdfind will return the correct path)
 sudo mkdir -p "$HOME/.local/bin" && ln -s $(export PATH="/usr/bin:$PATH" && which fdfind) "$HOME/.local/bin/fd" # link the fd-find binary to fd
