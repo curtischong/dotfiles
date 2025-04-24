@@ -129,8 +129,8 @@ wget --directory-prefix=$HOME/.local/share/fzf https://raw.githubusercontent.com
 wget --directory-prefix=$HOME/.local/share/fzf https://raw.githubusercontent.com/junegunn/fzf/master/shell/completion.zsh
 chmod +x $HOME/.local/share/fzf/key-bindings.zsh
 chmod +x $HOME/.local/share/fzf/completion.zsh
-echo 'source $HOME/.local/share/fzf/key-bindings.zsh' >> ~/.zshrc
-echo 'source $HOME/.local/share/fzf/completion.zsh' >> ~/.zshrc
+#echo 'source $HOME/.local/share/fzf/key-bindings.zsh' >> ~/.zshrc
+#echo 'source $HOME/.local/share/fzf/completion.zsh' >> ~/.zshrc
 
 # if [ $distro != "macOS" ]; then
 source "$HOME/.zshrc"
