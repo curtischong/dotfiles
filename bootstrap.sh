@@ -109,6 +109,7 @@ echo 'eval "$(zoxide init bash)"' >> ~/.bashrc
 #   source ~/.bashrc
 # fi
 
+source $HOME/.cargo/env
 cargo install git-delta
 git config --global core.pager delta
 git config --global interactive.diffFilter 'delta --color-only'
