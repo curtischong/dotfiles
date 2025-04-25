@@ -113,7 +113,8 @@ cargo install git-delta
 git config --global core.pager delta
 git config --global interactive.diffFilter 'delta --color-only'
 git config --global delta.navigate true
-git config --global merge.conflictStyle zdiff3
+# git config --global merge.conflictStyle zdiff3 # zdiff3 is for zsh not bash I believe
+git config --global merge.conflictStyle diff3
 # if [ $distro != "macOS" ]; then
 #   echo "installing diff so fancy"
 #   sudo git clone https://github.com/so-fancy/diff-so-fancy.git ~/.diff-so-fancy
