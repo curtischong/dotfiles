@@ -67,7 +67,7 @@ function link_dotfiles(){
     ln -nfs "$PWD/$file" "$HOME/$file"
   done
 
-  if [ "$env_type" = "bash" ]; then
+  if [ "$env_type" == "bash" ]; then
     echo "source $HOME/.commonbashrc" >> "$HOME/.bashrc"
     source "$HOME/.bashrc"
   else
@@ -137,7 +137,7 @@ $package_manager fd-find || $package_manager fd `#really useful for showing all 
 
 # install zoxide first, since if a command runs "cd", we will be able to change directory (since we override cd with zoxide)
 curl -sSfL https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | sh
-if [ $distro != "macOS" ]; then
+if [ $env_type == "bash" ]; then
   echo 'eval "$(zoxide init bash)"' >> ~/.bashrc
   source ~/.bashrc
 fi
@@ -208,7 +208,7 @@ if [ $distro == "macOS" ]; then
     done
 fi
 
-if [ $distro != "macOS" ]; then
+if [ $env_type == "bash" ]; then
   source "$HOME/.bashrc"
 fi
 # we have to link fd-find to fd here (at the end of the file) rather than right after the install command
