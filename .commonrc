@@ -57,3 +57,5 @@ function select_conda_env() {
         echo "No environment selected."
     fi
 }
+
+export TERM=xterm-256color # for kitty terminal
