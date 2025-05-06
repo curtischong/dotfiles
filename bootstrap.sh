@@ -72,10 +72,10 @@ echo 'eval "$(zoxide init bash)"' >> ~/.bashrc
 source $HOME/.cargo/env
 
 #cargo install git-delta
-#git config --global core.pager delta
-#git config --global interactive.diffFilter 'delta --color-only'
-#git config --global delta.navigate true
-#git config --global merge.conflictStyle diff3
+git config --global core.pager delta
+git config --global interactive.diffFilter 'delta --color-only'
+git config --global delta.navigate true
+git config --global merge.conflictStyle diff3
 
 # git config --global merge.conflictStyle zdiff3 # zdiff3 is for zsh not bash I believe
 
