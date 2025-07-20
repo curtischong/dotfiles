@@ -5,9 +5,10 @@ alias vgrc='vim ~/.gitrc'
 alias vvrc='vim ~/.vimrc'
 
 
-HISTSIZE=1000000 # the number of commands that are loaded into memory from the history file
-HISTFILESIZE=1000000 # the number of commands that are stored in the history file (when the shell ends)
-SAVEHIST=1000000 # like HISTFILESIZE but for other unix distros
+HISTSIZE=999999999 # the number of commands that are loaded into memory from the history file
+HISTFILESIZE=999999999 # the number of commands that are stored in the history file (when the shell ends)
+SAVEHIST=$HISTSIZE
+setopt INC_APPEND_HISTORY
 
 export HISTCONTROL=ignoredups # This ignores duplicate commands in .bash_history
 
