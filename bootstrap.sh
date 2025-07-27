@@ -85,3 +85,9 @@ source "$HOME/.bashrc"
 # we have to link fd-find to fd here (at the end of the file) rather than right after the install command
 # I think it's because the install command launches an async process to install fd, and by running the ln command here, it is more probable that the install command has finished (so which fdfind will return the correct path)
 #sudo mkdir -p "$HOME/.local/bin" && ln -s $(export PATH="/usr/bin:$PATH" && which fdfind) "$HOME/.local/bin/fd" # link the fd-find binary to fd
+
+
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
+source "$HOME/.bashrc"
+nvm install --lts
+npm install -g @anthropic-ai/claude-code
