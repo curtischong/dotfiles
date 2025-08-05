@@ -3,6 +3,8 @@ alias sr="export MANUALLY_SOURCING_RC=true && source $HOME/.zshrc && echo source
 alias vr="vim $HOME/.zshrc"  # vr means: vim .zshrc
 alias vczrc="vim $HOME/.commonzshrc"  # vczrc means: vim .commonzshrc
 
+setopt INC_APPEND_HISTORY # increment the zsh history file each time we run a command
+
 #bindkey -v # for vi in terminal
 bindkey "^?" backward-delete-char # fixes a bug that prevents you from hitting backspace in insert mode
 
