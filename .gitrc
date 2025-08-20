@@ -6,6 +6,7 @@ alias gco='git checkout'
 alias gcom='git checkout main || git checkout master'
 alias gcob='git checkout -b'
 alias gcm='git commit -m'
+alias gcmn='git commit --no-verify -m'
 alias gca='git commit --amend --date=now' # this is like gc, but we want to edit the commit message
 alias gc='gca --no-edit && echo "git commit --amend --no-edit --date=now"'
 alias gf='git fetch origin && echo "fetched origin"'
