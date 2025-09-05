@@ -48,29 +48,30 @@ function ccd(){
 # Justfile tab completion support
 # https://chatgpt.com/share/67c5255b-1040-800e-a418-02d00ba9e7cd
 # Function to provide fzf-based completions for "just"
-_just_fzf_completion() {
-  # Only trigger if completing the first argument (the task name)
-  if [ "$COMP_CWORD" -eq 1 ]; then
-    local file="justfile"
-    if [ ! -f "$file" ]; then
-      return 0
-    fi
-
-    # Extract task names (assumes tasks are defined as "task:" at the start of a line)
-    local tasks
-    tasks=$(grep -E '^[[:alnum:]_-]+:' "$file" | sed 's/://')
-    if [ -z "$tasks" ]; then
-      return 0
-    fi
-
-    # Use fzf for interactive selection; pass the current word as query
-    local selection
-    selection=$(echo "$tasks" | fzf --height 40% --query "${COMP_WORDS[COMP_CWORD]}")
-    if [ -n "$selection" ]; then
-      COMPREPLY=("$selection")
-    fi
-  fi
-}
-
-# Register the completion function for the "just" command
-complete -F _just_fzf_completion just
+# NOTE: I disabled this rn because it doesn't offer good tab completion support (e.g. like completing file paths)
+#_just_fzf_completion() {
+#  # Only trigger if completing the first argument (the task name)
+#  if [ "$COMP_CWORD" -eq 1 ]; then
+#    local file="justfile"
+#    if [ ! -f "$file" ]; then
+#      return 0
+#    fi
+#
+#    # Extract task names (assumes tasks are defined as "task:" at the start of a line)
+#    local tasks
+#    tasks=$(grep -E '^[[:alnum:]_-]+:' "$file" | sed 's/://')
+#    if [ -z "$tasks" ]; then
+#      return 0
+#    fi
+#
+#    # Use fzf for interactive selection; pass the current word as query
+#    local selection
+#    selection=$(echo "$tasks" | fzf --height 40% --query "${COMP_WORDS[COMP_CWORD]}")
+#    if [ -n "$selection" ]; then
+#      COMPREPLY=("$selection")
+#    fi
+#  fi
+#}
+# 
+# # Register the completion function for the "just" command
+# complete -F _just_fzf_completion just
