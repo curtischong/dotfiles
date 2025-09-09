@@ -55,3 +55,64 @@ rename_branch() {
     git push --set-upstream origin "$new_branch"
     git push origin --delete "$current_branch"
 }
+
+# https://chatgpt.com/share/68c05a81-5dfc-800e-a987-e2db00ea81f2
+# Save diffs vs main for 1+ files, then revert those files to main
+# Optional: set GIT_BASE to override (e.g., export GIT_BASE=master)
+alias gsd='f(){ \
+  BASE="${GIT_BASE:-main}"; \
+  DIFF_DIR=".git/file-diffs"; \
+  mkdir -p "$DIFF_DIR"; \
+  ts="$(date +%Y%m%d-%H%M%S)"; \
+  branch="$(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo unknown)"; \
+  if [ $# -eq 0 ]; then echo "Usage: git-save-diffs <file> [file ...]"; return 1; fi; \
+  for file in "$@"; do \
+    # Ensure file is tracked or exists in the index
+    if ! git ls-files --error-unmatch -- "$file" >/dev/null 2>&1 && [ ! -e "$file" ]; then \
+      echo "Skip: $file (not tracked)"; \
+      continue; \
+    fi; \
+    # Skip if no diff vs BASE
+    if git diff --quiet "$BASE" -- "$file"; then \
+      echo "No changes vs $BASE: $file"; \
+      continue; \
+    fi; \
+    safe="${file//\//__}"; \
+    patch="$DIFF_DIR/${ts}__${branch}__${safe}.patch"; \
+    git diff "$BASE" -- "$file" > "$patch" && \
+    git restore -s "$BASE" -- "$file" && \
+    echo "Saved: $patch  | Reverted: $file -> $BASE"; \
+  done; \
+  # Remember latest batch timestamp (useful if you want to target a batch later)
+  echo "$ts" > "$DIFF_DIR/.latest_ts"; \
+}; f'
+
+# Apply saved diffs (all, or only for specified files) without specifying paths
+alias gad='f(){ \
+  DIFF_DIR=".git/file-diffs"; \
+  if [ ! -d "$DIFF_DIR" ]; then echo "No stored diffs found ($DIFF_DIR)"; return 1; fi; \
+  shopt -s nullglob; \
+  patches=(); \
+  if [ $# -eq 0 ]; then \
+    # Apply all patches (sorted by name; they already include timestamps)
+    for p in "$DIFF_DIR"/*.patch; do patches+=("$p"); done; \
+  else \
+    # Apply only patches for given files (match by sanitized file path)
+    for arg in "$@"; do \
+      safe="${arg//\//__}"; \
+      matches=( "$DIFF_DIR"/*"${safe}".patch ); \
+      for p in "${matches[@]}"; do [ -e "$p" ] && patches+=("$p"); done; \
+    done; \
+  fi; \
+  if [ ${#patches[@]} -eq 0 ]; then echo "No matching patches to apply."; return 1; fi; \
+  # Apply in filename order (timestamps first if present)
+  IFS=$'\n' read -r -d "" -a patches_sorted < <(printf "%s\n" "${patches[@]}" | sort && printf "\0"); \
+  for p in "${patches_sorted[@]}"; do \
+    echo "Applying: $p"; \
+    if ! git apply --index "$p"; then \
+      echo "Failed to apply: $p (resolve conflicts or try manually with: git apply -3 \"$p\")"; \
+      return 1; \
+    fi; \
+  done; \
+  echo "Done."; \
+}; f'
