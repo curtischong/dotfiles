@@ -58,106 +58,159 @@ rename_branch() {
 }
 
 # https://chatgpt.com/share/68c05a81-5dfc-800e-a987-e2db00ea81f2
-# https://chatgpt.com/share/68c05a81-5dfc-800e-a987-e2db00ea81f2
-# gad: Pop (apply latest batch) via 3-way merge, then DELETE the patch (LIFO).
-#      Options:
-#        gad                 -> pop latest batch
-#        gad --keep          -> apply latest but keep patch
-#        gad --patch FILE    -> apply specific patch file (kept unless --keep)
-#        gad all / --all     -> pop ALL batches newest→oldest
-alias gad='f(){ \
-  DIFF_DIR="${GIT_DIFF_DIR:-.git/file-diffs}"; \
-  git rev-parse --show-toplevel >/dev/null 2>&1 || { echo "Not a git repo."; return 1; }; \
-  [ -d "$DIFF_DIR" ] || { echo "No stored diffs ($DIFF_DIR)."; return 1; }; \
-  git diff --cached --quiet || { echo "Refusing: you have STAGED changes. Unstage or stash first."; return 1; }; \
-  KEEP=0; MODE=single; PATCH=""; \
-  case "$1" in \
-    --keep) KEEP=1; shift ;; \
-  esac; \
-  case "$1" in \
-    all|--all) MODE=all; shift ;; \
-    --patch) PATCH="$2"; shift 2 ;; \
-  esac; \
-  apply_patch(){ \
-    local p="$1"; \
-    echo "Applying (3-way): $p"; \
-    if git apply -3 --whitespace=nowarn "$p"; then \
-      echo "  Applied cleanly."; \
-    else \
-      echo "  Applied with conflicts (markers written)."; \
-    fi; \
-    if [ $KEEP -eq 0 ]; then \
-      rm -f "$p" "${p%.patch}.list"; \
-      echo "  Popped: $p"; \
-    else \
-      echo "  Kept: $p"; \
-    fi; \
-  }; \
-  shopt -s nullglob; \
-  if [ -n "$PATCH" ]; then \
-    [ -f "$PATCH" ] || { echo "Patch not found: $PATCH"; return 1; }; \
-    apply_patch "$PATCH"; \
-  elif [ "$MODE" = all ]; then \
-    patches=( "$DIFF_DIR"/*.patch ); \
-    [ ${#patches[@]} -gt 0 ] || { echo "No patches to apply."; return 1; }; \
-    mapfile -d "" -t sorted < <(printf "%s\0" "${patches[@]}" | sort -z); \
-    # newest→oldest (stack pop order)
-    for ((i=${#sorted[@]}-1; i>=0; i--)); do \
-      apply_patch "${sorted[$i]}"; \
-    done; \
-  else \
-    patches=( "$DIFF_DIR"/*.patch ); \
-    [ ${#patches[@]} -gt 0 ] || { echo "No patches to apply."; return 1; }; \
-    mapfile -d "" -t sorted < <(printf "%s\0" "${patches[@]}" | sort -z); \
-    latest="${sorted[-1]}"; \
-    apply_patch "$latest"; \
-  fi; \
-  # housekeeping pointer
-  remaining=( "$DIFF_DIR"/*.patch ); \
-  if [ ${#remaining[@]} -eq 0 ]; then \
-    rm -f "$DIFF_DIR/.latest_patch"; \
-  else \
-    mapfile -d "" -t remsrt < <(printf "%s\0" "${remaining[@]}" | sort -z); \
-    echo "${remsrt[-1]}" > "$DIFF_DIR/.latest_patch"; \
-  fi; \
-}; f'
+# --- config knobs (optional) ---
+: "${GIT_BASE:=main}"                 # default base branch
+: "${GIT_DIFF_DIR:=.git/file-diffs}"  # where to store patches per repo
 
-alias gsd='f(){ \
-  BASE="${GIT_BASE:-main}"; \
-  DIFF_DIR="${GIT_DIFF_DIR:-.git/file-diffs}"; \
-  mkdir -p "$DIFF_DIR" || return 1; \
-  git rev-parse --show-toplevel >/dev/null 2>&1 || { echo "Not a git repo."; return 1; }; \
-  # 1) Block if anything is staged
-  git diff --cached --quiet || { echo "Refusing: you have STAGED changes. Unstage or stash first."; return 1; }; \
-  # 2) Block if there are UNSTAGED changes outside the files we will save
-  if [ $# -eq 0 ]; then echo "Usage: gsd <file> [file ...]"; return 1; fi; \
-  mapfile -t dirty_unstaged < <(git diff --name-only); \
-  if [ ${#dirty_unstaged[@]} -gt 0 ]; then \
-    others=(); \
-    for p in "${dirty_unstaged[@]}"; do \
-      keep=0; for t in "$@"; do [ "$p" = "$t" ] && { keep=1; break; }; done; \
-      [ $keep -eq 0 ] && others+=("$p"); \
-    done; \
-    if [ ${#others[@]} -gt 0 ]; then \
-      echo "Refusing: UNSTAGED changes outside target files:"; \
-      printf "  %s\n" "${others[@]}"; \
-      echo "Stash/commit/clean them or include them in the gsd command."; \
-      return 1; \
-    fi; \
-  fi; \
-  # proceed (only target files may be dirty)
-  ts="$(date +%Y%m%d-%H%M%S)"; \
-  branch="$(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo unknown)"; \
-  files=(); \
-  for f in "$@"; do \
-    if git diff --quiet "$BASE" -- "$f"; then echo "No changes vs $BASE: $f"; else files+=("$f"); fi; \
-  done; \
-  [ ${#files[@]} -gt 0 ] || { echo "Nothing to save."; return 0; }; \
-  patch="$DIFF_DIR/${ts}__${branch}.patch"; \
-  list="$DIFF_DIR/${ts}__${branch}.list"; \
-  git diff --no-ext-diff --binary --full-index "$BASE" -- "${files[@]}" > "$patch" || { echo "Failed to create patch."; rm -f "$patch"; return 1; }; \
-  printf "%s\n" "${files[@]}" > "$list"; \
-  git restore --staged --worktree -s "$BASE" -- "${files[@]}" || { echo "Restore to $BASE failed."; return 1; }; \
-  echo "Saved: $patch"; \
-  echo "Reverted to $BASE (index+worktree) for listed files."; \
-}; f'
+# gsd: Save a batch patch vs $GIT_BASE, then restore BOTH index+worktree to base.
+# - Refuses if ANYTHING is staged (so we don't mix states).
+# - Refuses if there are UNSTAGED changes outside the files you pass.
+# - Leaves index matching BASE for the target files (clean starting point).
+gsd() {
+  local BASE="${GIT_BASE}"
+  local DIFF_DIR="${GIT_DIFF_DIR}"
+  git rev-parse --show-toplevel >/dev/null 2>&1 || { echo "Not a git repo."; return 1; }
+  mkdir -p "$DIFF_DIR" || return 1
+
+  # Block if anything is staged
+  if ! git diff --cached --quiet; then
+    echo "Refusing: you have STAGED changes. Unstage or stash first."
+    return 1
+  fi
+
+  # Require targets
+  if [ $# -eq 0 ]; then
+    echo "Usage: gsd <file> [file ...]"
+    return 1
+  fi
+
+  # Block if there are UNSTAGED changes outside target files (NUL-safe)
+  local p t keep others_found=0
+  while IFS= read -r -d '' p; do
+    keep=0
+    for t in "$@"; do
+      [ "$p" = "$t" ] && { keep=1; break; }
+    done
+    if [ $keep -eq 0 ]; then
+      if [ $others_found -eq 0 ]; then
+        echo "Refusing: UNSTAGED changes outside target files:"
+        others_found=1
+      fi
+      printf '  %s\n' "$p"
+    fi
+  done < <(git diff --name-only -z)
+  if [ $others_found -eq 1 ]; then
+    echo "Stash/commit/clean them or include them in the gsd command."
+    return 1
+  fi
+
+  # Build patch only for files that differ vs BASE
+  local ts branch patch list
+  ts="$(date +%Y%m%d-%H%M%S)"
+  branch="$(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo unknown)"
+
+  local f
+  local differ=()
+  for f in "$@"; do
+    if git diff --quiet "$BASE" -- "$f"; then
+      echo "No changes vs $BASE: $f"
+    else
+      differ+=("$f")
+    fi
+  done
+  if [ ${#differ[@]} -eq 0 ]; then
+    echo "Nothing to save."
+    return 0
+  fi
+
+  patch="$DIFF_DIR/${ts}__${branch}.patch"
+  list="$DIFF_DIR/${ts}__${branch}.list"
+
+  # commit-agnostic patch with full blob IDs + binaries (good for -3 later)
+  if ! git diff --no-ext-diff --binary --full-index "$BASE" -- "${differ[@]}" > "$patch"; then
+    echo "Failed to create patch."
+    rm -f "$patch"
+    return 1
+  fi
+  printf "%s\n" "${differ[@]}" > "$list"
+
+  # restore BOTH index and worktree to base for those files (clean slate)
+  if ! git restore --staged --worktree -s "$BASE" -- "${differ[@]}"; then
+    echo "Restore to $BASE failed."
+    return 1
+  fi
+
+  echo "Saved: $patch"
+  echo "Reverted to $BASE (index+worktree) for listed files."
+}
+
+# gad: Pop (apply latest batch) via 3-way merge to WORKTREE **and INDEX**, then DELETE the patch (LIFO).
+# Options:
+#   gad                 -> pop latest batch
+#   gad --keep          -> apply latest but keep patch
+#   gad --patch FILE    -> apply specific patch file (kept unless --keep)
+#   gad all / --all     -> pop ALL batches newest→oldest
+# Notes:
+#   - Uses `git apply -3 --index`: stages successful hunks; conflicts become unmerged entries with markers.
+#   - Refuses to run if there are pre-existing staged changes (to avoid mixing states).
+gad() {
+  local DIFF_DIR="${GIT_DIFF_DIR}"
+  git rev-parse --show-toplevel >/dev/null 2>&1 || { echo "Not a git repo."; return 1; }
+  [ -d "$DIFF_DIR" ] || { echo "No stored diffs ($DIFF_DIR)."; return 1; }
+
+  # Block if anything is already staged
+  if ! git diff --cached --quiet; then
+    echo "Refusing: you have STAGED changes. Unstage or stash first."
+    return 1
+  fi
+
+  # parse options
+  local KEEP=0 MODE="single" PATCH=""
+  if [ "$1" = "--keep" ]; then KEEP=1; shift; fi
+  case "$1" in
+    all|--all) MODE="all"; shift ;;
+    --patch) PATCH="$2"; shift 2 ;;
+  esac
+
+  apply_patch() {
+    local p="$1"
+    echo "Applying (3-way, updates index): $p"
+    if git apply -3 --index --whitespace=nowarn "$p"; then
+      echo "  Applied cleanly (changes staged)."
+    else
+      echo "  Applied with conflicts."
+      echo "  - Files contain conflict markers."
+      echo "  - Index has unmerged entries (like a merge)."
+    fi
+    if [ $KEEP -eq 0 ]; then
+      rm -f "$p" "${p%.patch}.list"
+      echo "  Popped: $p"
+    else
+      echo "  Kept: $p"
+    fi
+  }
+
+  if [ -n "$PATCH" ]; then
+    [ -f "$PATCH" ] || { echo "Patch not found: $PATCH"; return 1; }
+    apply_patch "$PATCH"
+  elif [ "$MODE" = "all" ]; then
+    local p
+    while IFS= read -r -d '' p; do
+      apply_patch "$p"
+    done < <(find "$DIFF_DIR" -maxdepth 1 -type f -name '*.patch' -print0 | sort -zr)
+  else
+    local latest
+    IFS= read -r -d '' latest < <(find "$DIFF_DIR" -maxdepth 1 -type f -name '*.patch' -print0 | sort -zr)
+    [ -n "$latest" ] || { echo "No patches to apply."; return 1; }
+    apply_patch "$latest"
+  fi
+
+  # housekeeping pointer
+  local remain
+  if IFS= read -r -d '' remain < <(find "$DIFF_DIR" -maxdepth 1 -type f -name '*.patch' -print0 | sort -zr); then
+    printf '%s\n' "$remain" > "$DIFF_DIR/.latest_patch"
+  else
+    rm -f "$DIFF_DIR/.latest_patch"
+  fi
+}
+
