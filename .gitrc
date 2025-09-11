@@ -21,6 +21,7 @@ alias ga='git add'
 alias gaa='git add --all'
 alias gd='git diff'
 alias gds='git diff --staged'
+alias gdd='git show --color=always HEAD~1 | less -R' # sees the last diff for the last commit
 alias gb='git branch'
 alias gsc='scommit'
 alias gsca='scommit -a'
