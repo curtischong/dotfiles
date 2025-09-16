@@ -61,6 +61,42 @@ function select_conda_env() {
 export TERM=xterm-256color # for kitty terminal
 
 # so when I'm in a docker container pytest will use the number of cpus allocated for that container
-export PYTEST_XDIST_AUTO_NUM_WORKERS=[ -f /sys/fs/cgroup/cpu.max ] && set -- $(cat /sys/fs/cgroup/cpu.max) && [ "$1" != "max" ] && echo $(($1 / $2))
-|| { [ -f /sys/fs/cgroup/cpu/cpu.cfs_quota_us ] && q=$(cat /sys/fs/cgroup/cpu/cpu.cfs_quota_us) && p=$(cat /sys/fs/cgroup/cpu/cpu.cfs_period_us) && [ "$q" -gt 0 ] && echo $(($q / $p))
-|| { command -v nproc >/dev/null 2>&1 && nproc || sysctl -n hw.ncpu; }; }
+# https://chatgpt.com/share/68c9c5aa-58ec-800e-a3cc-8d3619345f7e
+_pytest_auto_workers() {
+  local n="" quota period cpus
+
+  # cgroup v2: /sys/fs/cgroup/cpu.max has "<quota> <period>" or "max <period>"
+  if [ -r /sys/fs/cgroup/cpu.max ]; then
+    read -r quota period < /sys/fs/cgroup/cpu.max
+    if [ "$quota" != "max" ] && [ -n "$quota" ] && [ -n "$period" ] && [ "$period" -gt 0 ]; then
+      n=$(( quota / period ))
+    fi
+
+  # cgroup v1: quota/period files
+  elif [ -r /sys/fs/cgroup/cpu/cpu.cfs_quota_us ] && [ -r /sys/fs/cgroup/cpu/cpu.cfs_period_us ]; then
+    quota=$(cat /sys/fs/cgroup/cpu/cpu.cfs_quota_us 2>/dev/null)
+    period=$(cat /sys/fs/cgroup/cpu/cpu.cfs_period_us 2>/dev/null)
+    if [ -n "$quota" ] && [ "$quota" -gt 0 ] && [ -n "$period" ] && [ "$period" -gt 0 ]; then
+      n=$(( quota / period ))
+    fi
+  fi
+
+  # Host CPU count (Linux/macOS)
+  if command -v nproc >/dev/null 2>&1; then
+    cpus=$(nproc)
+  else
+    cpus=$(sysctl -n hw.ncpu 2>/dev/null || echo 1)
+  fi
+
+  # Fallbacks and sanity caps
+  if [ -z "$n" ] || [ "$n" -lt 1 ]; then
+    n=$cpus
+  fi
+  if [ "$n" -gt "$cpus" ]; then
+    n=$cpus
+  fi
+
+  echo "$n"
+}
+
+export PYTEST_XDIST_AUTO_NUM_WORKERS="$(_pytest_auto_workers)"
