@@ -59,3 +59,8 @@ function select_conda_env() {
 }
 
 export TERM=xterm-256color # for kitty terminal
+
+# so when I'm in a docker container pytest will use the number of cpus allocated for that container
+export PYTEST_XDIST_AUTO_NUM_WORKERS=[ -f /sys/fs/cgroup/cpu.max ] && set -- $(cat /sys/fs/cgroup/cpu.max) && [ "$1" != "max" ] && echo $(($1 / $2))
+|| { [ -f /sys/fs/cgroup/cpu/cpu.cfs_quota_us ] && q=$(cat /sys/fs/cgroup/cpu/cpu.cfs_quota_us) && p=$(cat /sys/fs/cgroup/cpu/cpu.cfs_period_us) && [ "$q" -gt 0 ] && echo $(($q / $p))
+|| { command -v nproc >/dev/null 2>&1 && nproc || sysctl -n hw.ncpu; }; }
