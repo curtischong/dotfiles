@@ -90,4 +90,7 @@ source "$HOME/.bashrc"
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
 source "$HOME/.bashrc"
 nvm install --lts
+
+# manually remove zsh files since it's sometimes leftover there I feel
+rm -rf "$HOME"/.zsh*
 npm install -g @anthropic-ai/claude-code
