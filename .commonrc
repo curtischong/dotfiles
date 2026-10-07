@@ -100,3 +100,9 @@ _pytest_auto_workers() {
 }
 
 export PYTEST_XDIST_AUTO_NUM_WORKERS="$(_pytest_auto_workers)"
+
+# Keep a stable agent socket so tmux panes survive Cursor reconnects
+if [ "$SSH_AUTH_SOCK" != ~/.ssh/ssh_auth_sock ] && { ssh-add -l >/dev/null 2>&1; [ $? -ne 2 ]; }; then
+  ln -sf "$SSH_AUTH_SOCK" ~/.ssh/ssh_auth_sock
+fi
+export SSH_AUTH_SOCK=~/.ssh/ssh_auth_sock
