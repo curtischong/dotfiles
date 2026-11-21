@@ -33,3 +33,10 @@
 	required = true
 [push]
 	autoSetupRemote = true
+[lfs "customtransfer.xet"]
+	path = git-xet
+	args = transfer
+	concurrent = true
+# Machine-specific settings (not tracked)
+[include]
+	path = ~/.gitconfig.local
