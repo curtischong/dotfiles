@@ -2,7 +2,7 @@
 
 # Check if the correct number of arguments is provided
 if [ "$#" -ne 1 ]; then
-    echo "Usage: $0"
+    echo "Usage: $0 <host-name>"
     exit 1
 fi
 

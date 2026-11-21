@@ -1,216 +1,141 @@
 #!/bin/bash
+# Sets up a machine with these dotfiles. Safe to re-run: a second run changes nothing in your
+# rc files and just updates the installed tools to their latest versions.
+#
+# - Shared configs are symlinked into $HOME (an existing regular file is backed up first).
+# - ~/.bashrc / ~/.zshrc are never replaced (they hold machine-specific stuff like API keys);
+#   we only append a single `source` line if it isn't already there.
+#
+# Set SKIP_INSTALL=1 to only link files and wire up rc files (no package installs).
+set -euo pipefail
 
+DOTFILES="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-# Needed for cdd command (with fuzzy search)
-# We need to install from source since amazon linux doesn't have the binary available
-function install_fd_from_source(){
-  #install cc linker (needed for rust)
-  sudo yum install -y gcc
-
-  # install rust
-  curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
-  source ~/.bashrc
-  echo "installing fd from source"
-  cargo install fd-find
+# Append a line to a file unless a line matching `pattern` (grep -E) is already in it.
+ensure_line() {
+  local file="$1" line="$2" pattern="$3"
+  touch "$file"
+  grep -qE "$pattern" "$file" || printf '\n%s\n' "$line" >> "$file"
 }
 
-function install_fd_from_bin(){
-  # currently doesn't run on centos :(
-  echo "installing fd from bin"
-  # assume we're running bash
-  sudo wget -P ~/ https://github.com/sharkdp/fd/releases/download/v8.7.0/fd-v8.7.0-arm-unknown-linux-musleabihf.tar.gz
-  tar -xzf fd-v8.7.0-arm-unknown-linux-musleabihf.tar.gz
-  rm fd-v8.7.0-arm-unknown-linux-musleabihf.tar.gz
-  mv fd-v8.7.0-arm-unknown-linux-musleabihf .fd-find
-  echo 'PATH="$HOME/.fd-find/:$PATH"' >> ~/.bashrc
-}
-
-  # I just prebuild it from cargo and just saved the binary
-function install_ec2_linux_prebuild_bin(){
-  echo "PATH=\"$PWD/binaries/amazon-ec2-linux-2023/:\$PATH\"" >> ~/.bashrc
-}
-
-function install_rg_for_centos(){
-  # doesn't work :(
-  sudo yum-config-manager --add-repo=https://copr.fedorainfracloud.org/coprs/carlwgeorge/ripgrep/repo/epel-7/carlwgeorge-ripgrep-epel-7.repo
-  sudo yum install ripgrep
-}
-
-function link_dotfiles(){
-  filesToLink=(
-    .commonrc
-    .gitrc
-    .gitconfig
-    .vimrc
-    .tmux.conf
-    .ideavimrc
-    nuke-local-branches.sh
-  )
-
-  env_type="$(basename $SHELL)"
-
-  if [[ "$env_type" != "bash" && "$env_type" != "zsh" ]]; then
-      echo "Error: run this script using 'bash' or 'zsh'" >&2
-      exit 1
+# Symlink $DOTFILES/$1 to $HOME/$1, backing up a real file that's in the way.
+link() {
+  local src="$DOTFILES/$1" dst="$HOME/$1"
+  if [ -e "$dst" ] && [ ! -L "$dst" ]; then
+    mv "$dst" "$dst.bak.$(date +%Y%m%d-%H%M%S)"
+    echo "Backed up existing $dst"
   fi
+  ln -nfs "$src" "$dst"
+}
 
-
-  if [ "$env_type" = "bash" ]; then
-    filesToLink+=(".commonbashrc")
-  else
-    filesToLink+=(".commonzshrc")
-  fi
-
-  # link all files to $HOME directory
-  # https://opensource.com/article/19/3/move-your-dotfiles-version-control
-  for file in "${filesToLink[@]}"; do
-    ln -nfs "$PWD/$file" "$HOME/$file"
+link_dotfiles() {
+  local f
+  for f in .commonrc .commonbashrc .commonzshrc .gitrc .gitconfig .vimrc .tmux.conf .ideavimrc nuke-local-branches.sh; do
+    link "$f"
   done
 
-  if [ "$env_type" == "bash" ]; then
-    echo "source $HOME/.commonbashrc" >> "$HOME/.bashrc"
-    source "$HOME/.bashrc"
+  ensure_line "$HOME/.bashrc" 'source "$HOME/.commonbashrc"' '\.commonbashrc'
+  # login shells (tmux panes, ssh) read ~/.bash_profile instead of ~/.bashrc
+  ensure_line "$HOME/.bash_profile" '[ -f "$HOME/.bashrc" ] && . "$HOME/.bashrc"' '\.bashrc'
+  if command -v zsh >/dev/null 2>&1; then
+    ensure_line "$HOME/.zshrc" 'source "$HOME/.commonzshrc"' '\.commonzshrc'
+  fi
+}
+
+detect_os() {
+  if [ "$(uname -s)" = "Darwin" ]; then
+    echo macos
+  elif command -v apt-get >/dev/null 2>&1; then
+    echo debian
+  elif command -v dnf >/dev/null 2>&1; then
+    echo fedora
+  elif command -v yum >/dev/null 2>&1; then
+    echo centos
+  elif command -v pacman >/dev/null 2>&1; then
+    echo arch
   else
-    echo "source $HOME/.commonzshrc" >> "$HOME/.zshrc"
-    source "$HOME/.zshrc"
+    echo "Unsupported OS" >&2
+    exit 1
+  fi
+}
+
+# Install packages if missing, upgrade them if already installed.
+install_packages() {
+  case "$OS" in
+    macos)  brew install "$@" && brew upgrade "$@" ;;
+    debian) sudo apt-get update && sudo apt-get install -y "$@" ;;  # install also upgrades named packages
+    fedora) sudo dnf install -y "$@" && sudo dnf upgrade -y "$@" ;;
+    centos) sudo yum install -y "$@" && sudo yum update -y "$@" ;;
+    arch)   sudo pacman -S --noconfirm "$@" ;;
+  esac
+}
+
+# Clone a repo, or pull it if it's already there.
+clone_or_pull() {
+  local url="$1" dir="$2"
+  if [ -d "$dir/.git" ]; then
+    git -C "$dir" pull --ff-only
+  else
+    git clone --depth 1 "$url" "$dir"
+  fi
+}
+
+install_tools() {
+  mkdir -p "$HOME/.local/bin"
+
+  case "$OS" in
+    macos)
+      install_packages git htop vim tmux curl wget ripgrep fd diff-so-fancy \
+        zsh-syntax-highlighting zsh-autosuggestions zsh-completions
+      ;;
+    centos)
+      install_packages git htop vim tmux curl patch wget xclip
+      # Amazon Linux doesn't package fd/rg, so we ship prebuilt binaries
+      ln -sf "$DOTFILES/binaries/amazon-ec2-linux-2023/fd" "$HOME/.local/bin/fd"
+      ln -sf "$DOTFILES/binaries/amazon-ec2-linux-2023/rg" "$HOME/.local/bin/rg"
+      ;;
+    debian|fedora)
+      install_packages git htop vim tmux curl patch wget xclip ripgrep fd-find
+      ;;
+    arch)
+      install_packages git htop vim tmux curl patch wget xclip ripgrep fd
+      ;;
+  esac
+
+  # Debian/Ubuntu name the fd binary `fdfind`
+  if command -v fdfind >/dev/null 2>&1; then
+    ln -sf "$(command -v fdfind)" "$HOME/.local/bin/fd"
+  fi
+
+  if [ "$OS" != macos ]; then
+    clone_or_pull https://github.com/so-fancy/diff-so-fancy.git "$HOME/.diff-so-fancy"
+
+    # node via nvm (on macOS, node comes from mise). The installer is safe to re-run.
+    curl -fsSL https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
+    export NVM_DIR="$HOME/.nvm"
+    # shellcheck disable=SC1091
+    . "$NVM_DIR/nvm.sh"
+    nvm install --lts
+  fi
+
+  # zoxide's installer always fetches the latest release into ~/.local/bin
+  curl -fsSL https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | sh
+
+  # fzf from git so every OS gets the same recent version; its installer won't duplicate rc lines
+  clone_or_pull https://github.com/junegunn/fzf.git "$HOME/.fzf"
+  "$HOME/.fzf/install" --key-bindings --completion --update-rc
+
+  if command -v claude >/dev/null 2>&1; then
+    claude update
+  else
+    curl -fsSL https://claude.ai/install.sh | bash
   fi
 }
 
 link_dotfiles
-
-options=("macOS (brew)" "Debian/Ubuntu (apt-get)" "Fedora (dnf)" "CentOS (yum)" "Arch Linux (pacman)")
-echo "Select your Linux distribution from the following list:"
-PS3="Enter choice number: "
-
-select opt in "${options[@]}"
-do
-    case $opt in
-        "macOS (brew)")
-            distro="macOS"
-            package_manager="brew install"
-            break
-            ;;
-        "Debian/Ubuntu (apt-get)")
-            distro="debian/ubuntu"
-            package_manager="sudo apt-get install -y"
-            sudo apt update # so we can find binaries like fd-find
-            sudo snap install ripgrep --classic
-            break
-            ;;
-        "Fedora (dnf)")
-            distro="fedora"
-            package_manager="sudo dnf install -y"
-            break
-            ;;
-        "CentOS (yum)")
-            distro="centos"
-            package_manager="sudo yum install -y"
-            #sudo yum install yum-utils # so we can use yum-config-manager. Commented for now since nothing uses it
-            install_ec2_linux_prebuild_bin
-            break
-            ;;
-        "Arch Linux (pacman)")
-            distro="arch linux"
-            package_manager="sudo pacman install -y"
-            break
-            ;;
-        *) echo "Invalid input. Please choose a number between 1 and ${#options[@]}";;
-    esac
-done
-
-echo "You have selected $distro"
-
-echo "Installing core packages..."
-$package_manager git `#dont need to install git cause you needed git to install this repo`
-$package_manager htop
-$package_manager vim
-$package_manager tmux
-$package_manager curl
-$package_manager patch
-$package_manager wget
-$package_manager xclip `#TODO: check if we can do cat file | xclip -selection clipboard`
-$package_manager ripgrep  `#just faster grep. And prettier coloring I think` 
-# not sure if I should uncomment:
-#$package_manager neovim 
-
-$package_manager fd-find || $package_manager fd `#really useful for showing all directories and feeding them into fzf` \
-
-# install zoxide first, since if a command runs "cd", we will be able to change directory (since we override cd with zoxide)
-curl -sSfL https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | sh
-if [ $env_type == "bash" ]; then
-  echo 'eval "$(zoxide init bash)"' >> ~/.bashrc
-  source ~/.bashrc
+if [ "${SKIP_INSTALL:-0}" != 1 ]; then
+  OS="$(detect_os)"
+  echo "Detected OS: $OS"
+  install_tools
 fi
-
-if [ $distro != "macOS" ]; then
-  echo "installing diff so fancy"
-  sudo git clone https://github.com/so-fancy/diff-so-fancy.git ~/.diff-so-fancy
-  echo 'PATH="$HOME/.diff-so-fancy/:$PATH"' >> ~/.bashrc
-fi
-
-# install fzf like this because ec2 doens't have fzf indexed (also because I want it to change my bash configs to enable history search with fzf)
-git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
-~/.fzf/install --all
-
-
-if [ $distro == "macOS" ]; then
-    zshrc_location="$HOME/.zshrc";
-    while true; do
-        echo "Do you want to install the following packages? (y/n)"
-        # disabling zsh-history-substring-search since it doesn't install properly on macOS (calls bash instead of zsh). I also don't think I would care enough to get it working rn
-        # read -p "zsh-syntax-highlighting, zsh-autosuggestions, zsh-completions, zsh-history-substring-search: " yn
-        read -p "zsh-syntax-highlighting, zsh-autosuggestions, zsh-completions: " yn
-        case $yn in
-            [Yy]* )
-                echo '# ---- Start of install_core_packages.sh ----' >> $zshrc_location;
-                echo 'export HOMEBREW_PREFIX=/opt/homebrew' >> $zshrc_location;
-                echo 'export PATH=/opt/homebrew/bin:$PATH' >> $zshrc_location;
-
-                #brew install zsh-syntax-highlighting zsh-autosuggestions zsh-completions zsh-history-substring-search;
-                brew install zsh-syntax-highlighting zsh-autosuggestions zsh-completions;
-
-                # https://formulae.brew.sh/formula/zsh-syntax-highlighting
-                echo 'source $HOMEBREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh' >> $zshrc_location;
-
-                # https://formulae.brew.sh/formula/zsh-autosuggestions
-                echo 'source $HOMEBREW_PREFIX/share/zsh-autosuggestions/zsh-autosuggestions.zsh' >> $zshrc_location;
-                # If you receive "highlighters directory not found" error message, you may need to add the following to your .zshenv:
-                # export ZSH_HIGHLIGHT_HIGHLIGHTERS_DIR=$HOMEBREW_PREFIX/share/zsh-syntax-highlighting/highlighters
-                echo '# bind CTRL+O to forward-word so we can accept one token at a time (rather than the entire line)' >> $zshrc_location;
-                echo 'bindkey ^O forward-word # https://stackoverflow.com/questions/2212203/moving-a-word-forward-in-z-shell' >> $zshrc_location;
-
-                # https://formulae.brew.sh/formula/zsh-completions
-                echo ' if type brew &>/dev/null; then
-     FPATH=$(brew --prefix)/share/zsh-completions:$FPATH
-
-     autoload -Uz compinit
-     compinit
-    fi' >> $zshrc_location;
-                # You may also need to force rebuild `zcompdump`:
-                # 
-                #     rm -f ~/.zcompdump; compinit
-                # 
-                # Additionally, if you receive "zsh compinit: insecure directories" warnings when attempting
-                # to load these completions, you may need to run this:
-                # 
-                #     chmod -R go-w '$HOMEBREW_PREFIX/share/zsh'
-
-
-                # https://formulae.brew.sh/formula/zsh-history-substring-search
-                # source $HOMEBREW_PREFIX/share/zsh-history-substring-search/zsh-history-substring-search.zsh >> $zshrc_location;
-
-                echo '# ---- End of install_core_packages.sh ----' >> $zshrc_location;
-
-                break;;
-            [Nn]* ) echo "Skipping..."; break;;
-            * ) echo "Please answer yes or no.";;
-        esac
-    done
-fi
-
-if [ $env_type == "bash" ]; then
-  source "$HOME/.bashrc"
-fi
-# we have to link fd-find to fd here (at the end of the file) rather than right after the install command
-# I think it's because the install command launches an async process to install fd, and by running the ln command here, it is more probable that the install command has finished (so which fdfind will return the correct path)
-sudo mkdir -p "$HOME/.local/bin" && ln -s $(export PATH="/usr/bin:$PATH" && which fdfind) "$HOME/.local/bin/fd" # link the fd-find binary to fd
+echo "Done. Open a new shell to pick up the changes."

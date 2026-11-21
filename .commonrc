@@ -1,5 +1,11 @@
 source "$HOME/.gitrc"
 
+# homebrew (Apple Silicon). Same as `eval "$(brew shellenv)"` but without spawning brew on every shell
+if [ -d /opt/homebrew/bin ]; then
+  export HOMEBREW_PREFIX=/opt/homebrew
+  export PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH"
+fi
+
 alias vcrc='vim ~/.commonrc'
 alias vgrc='vim ~/.gitrc'
 alias vvrc='vim ~/.vimrc'
@@ -8,8 +14,6 @@ alias vvrc='vim ~/.vimrc'
 HISTSIZE=999999999 # the number of commands that are loaded into memory from the history file
 HISTFILESIZE=999999999 # the number of commands that are stored in the history file (when the shell ends)
 SAVEHIST=$HISTSIZE
-
-export HISTCONTROL=ignoredups # This ignores duplicate commands in .bash_history
 
 # colours for the terminal to differentiate between files and directories
 export CLICOLOR=1
@@ -43,22 +47,9 @@ alias killport='function _killport() { lsof -i :$1 | awk '\''NR > 1 {print $2}'\
 alias stopdocker='docker stop $(docker ps -a -q)'
 alias rmdocker='docker rm $(docker ps -a -q)'
 
-function select_conda_env() {
-    # Get the list of conda environments
-    envs=$(conda info --envs | awk 'NR>2 {print $1}')
-
-    # Use fzf to select an environment
-    selected_env=$(echo "$envs" | fzf --prompt="Select a conda environment: ")
-
-    # Check if a valid environment was selected
-    if [[ -n "$selected_env" ]]; then
-        conda activate "$selected_env"
-    else
-        echo "No environment selected."
-    fi
-}
-
-export TERM=xterm-256color # for kitty terminal
+# tools that setup_machine.sh installs outside the package manager on linux
+[ -d "$HOME/.diff-so-fancy" ] && export PATH="$HOME/.diff-so-fancy:$PATH"
+[ -d "$HOME/go/bin" ] && export PATH="$PATH:$HOME/go/bin"
 
 # so when I'm in a docker container pytest will use the number of cpus allocated for that container
 # https://chatgpt.com/share/68c9c5aa-58ec-800e-a3cc-8d3619345f7e
@@ -102,7 +93,9 @@ _pytest_auto_workers() {
 export PYTEST_XDIST_AUTO_NUM_WORKERS="$(_pytest_auto_workers)"
 
 # Keep a stable agent socket so tmux panes survive Cursor reconnects
-if [ "$SSH_AUTH_SOCK" != ~/.ssh/ssh_auth_sock ] && { ssh-add -l >/dev/null 2>&1; [ $? -ne 2 ]; }; then
-  ln -sf "$SSH_AUTH_SOCK" ~/.ssh/ssh_auth_sock
+if [ -d ~/.ssh ]; then
+  if [ "$SSH_AUTH_SOCK" != ~/.ssh/ssh_auth_sock ] && { ssh-add -l >/dev/null 2>&1; [ $? -ne 2 ]; }; then
+    ln -sf "$SSH_AUTH_SOCK" ~/.ssh/ssh_auth_sock
+  fi
+  export SSH_AUTH_SOCK=~/.ssh/ssh_auth_sock
 fi
-export SSH_AUTH_SOCK=~/.ssh/ssh_auth_sock

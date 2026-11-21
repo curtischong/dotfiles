@@ -8,7 +8,7 @@ setopt INC_APPEND_HISTORY # increment the zsh history file each time we run a co
 #bindkey -v # for vi in terminal
 bindkey "^?" backward-delete-char # fixes a bug that prevents you from hitting backspace in insert mode
 
-# reverse search
+# reverse search (fzf replaces ^r with its own widget when it's installed)
 bindkey '^r' history-incremental-search-backward
 bindkey '^s' history-incremental-search-forward
 
@@ -26,17 +26,20 @@ _my_make_completion() {
   options=$(grep -oE '^[a-zA-Z0-9_.-]+[:]*[a-zA-Z0-9_.-]+:([^=]|$)' Makefile | sort | uniq | sed 's/[^a-zA-Z0-9_.-]*$//' | sed 's/[\\]//g' | fzf)
   compadd -- ${options}
 }
+
+# Plugins installed by setup_machine.sh (homebrew on macOS, apt on linux)
+for _zsh_share in /opt/homebrew/share /usr/local/share /usr/share; do
+  [ -d "$_zsh_share/zsh-completions" ] && FPATH="$_zsh_share/zsh-completions:$FPATH"  # must be before compinit
+  [ -f "$_zsh_share/zsh-autosuggestions/zsh-autosuggestions.zsh" ] && source "$_zsh_share/zsh-autosuggestions/zsh-autosuggestions.zsh"
+done
+bindkey '^O' forward-word # accept one autosuggestion word at a time (rather than the entire line)
+
 autoload -Uz compinit # needed for compdef https://unix.stackexchange.com/questions/339954/zsh-command-not-found-compinstall-compinit-compdef
 # only rebuild the completion cache once a day; otherwise load it as-is (much faster)
 _zcompdump_stale=(~/.zcompdump(N.mh+24))
 if (( $#_zcompdump_stale )); then compinit; else compinit -C; fi
 unset _zcompdump_stale
 compdef _my_make_completion make  # Register the completion function with the make command
-
-
-export NVM_DIR="$HOME/.nvm"
-[ -s "/usr/local/opt/nvm/nvm.sh" ] && . "/usr/local/opt/nvm/nvm.sh"  # This loads nvm
-[ -s "/usr/local/opt/nvm/etc/bash_completion" ] && . "/usr/local/opt/nvm/etc/bash_completion"  # This loads nvm bash_completion
 
 function parse_git_branch() {
     git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ (\1)/'
@@ -48,15 +51,17 @@ PS1='$(printf "\e[1;31m%s: \e[1;33m%s \e[1;92m%s \e[1;0m"  "$USER" "$PWD" "$(par
 
 # I tried putting this logic in .commonrc but it didn't work. it needs to be sourced at the end of the .zshrc file
 export PATH="$HOME/.local/bin:$PATH"
-eval "$(zoxide init zsh)"
-function cd(){
-     z "$@" &&
-     pwd > "$HOME/.last_dir"
-}
-function ccd(){
-     zi "$@" &&
-     pwd > "$HOME/.last_dir"
-}
+if command -v zoxide >/dev/null 2>&1; then
+  eval "$(zoxide init zsh)"
+  function cd(){
+       z "$@" &&
+       pwd > "$HOME/.last_dir"
+  }
+  function ccd(){
+       zi "$@" &&
+       pwd > "$HOME/.last_dir"
+  }
+fi
 
 # Justfile tab completion support
 # https://chatgpt.com/share/67c5255b-1040-800e-a418-02d00ba9e7cd
@@ -89,3 +94,9 @@ function ccd(){
 # 
 # # Register the completion function for the "just" command
 # compdef _just_fzf_completion just
+
+# syntax highlighting should be loaded after everything else that defines zle widgets
+for _zsh_share in /opt/homebrew/share /usr/local/share /usr/share; do
+  [ -f "$_zsh_share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" ] && source "$_zsh_share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+done
+unset _zsh_share
