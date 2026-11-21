@@ -27,7 +27,8 @@ _my_make_completion() {
   compadd -- ${options}
 }
 autoload -Uz compinit # needed for compdef https://unix.stackexchange.com/questions/339954/zsh-command-not-found-compinstall-compinit-compdef
-compinit
+# only rebuild the completion cache once a day; otherwise load it as-is (much faster)
+if [[ -n ~/.zcompdump(#qN.mh+24) ]]; then compinit; else compinit -C; fi
 compdef _my_make_completion make  # Register the completion function with the make command
 
 
